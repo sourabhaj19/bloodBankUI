@@ -1,30 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { MENU_ITEMS } from './pages.menu';
-import { MenuService } from './services/menuService';
 import { RouterOutlet } from '@angular/router';
+import { MENU_ITEMS } from './pages.menu';
 import { HeaderComponent } from './components/header/header.component';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
 })
+
 export class AppComponent implements OnInit {
   menu: any[] = [];
   userRoleForMenu: string = '';
 
-  constructor(private menuService: MenuService) {}
+  constructor(private authService: AuthService) {}
+
 
   ngOnInit() {
     // Subscribe to auth changes
-    this.menuService.currentUser$.subscribe(() => {
+    this.authService.currentUser$.subscribe(() => {
       this.updateMenu();
     });
     this.updateMenu(); // Initial load
   }
 
   updateMenu() {
-    const role = this.menuService.getCurrentRole();
+    const role = this.authService.getCurrentRole();
     this.menu = this.getMenuCopy(); // Deep copy
 
     // Role display mapping

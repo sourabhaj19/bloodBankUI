@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { apiSevrvice } from '../../services/apiService';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent implements AfterViewInit, OnInit {
   loginForm!: FormGroup; // Ensure correct initialization
   registrationForm!: FormGroup; // Ensure correct initialization
 
-  constructor(private route: Router, private fb: FormBuilder, private apiservice : apiSevrvice) {}
+  constructor(private route: Router, private fb: FormBuilder, private apiservice : apiSevrvice, private authService: AuthService) {}
 
   ngOnInit() {
     this.getLocation()
@@ -62,7 +63,7 @@ export class LoginComponent implements AfterViewInit, OnInit {
     if (this.loginForm.valid) {
       this.apiservice.login(this.loginForm.value).subscribe({
         next : (res:any)=>{
-
+          this.authService.login({ role: 'ROLE_ADMIN' }); 
           console.log(res)
           sessionStorage.setItem('currentUser', JSON.stringify(res));
           sessionStorage.setItem('token', res.token)

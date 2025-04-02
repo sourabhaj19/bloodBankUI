@@ -1,86 +1,91 @@
 <div #container class="container">
-        <div class="form-box login">
-            <form [formGroup]="loginForm" (ngSubmit)="login()">
-                <h1>Login</h1>
-                <div class="input-box">
-                    <input type="text" formControlName="username" placeholder="username" required>
-                    <i class='bx bxs-user'></i>
-                </div>
-                <div class="input-box">
-                    <input type="password" formControlName="password" placeholder="password" required>
-                    <i class='bx bxs-lock-alt' ></i>
-                </div>
-                <div class="forgot-link">
-                    <a href="#">Forgot Password?</a>
-                </div>
-                <button type="submit" class="btn">Login</button>
-                <p>or login with social platforms</p>
-                <div class="social-icons">
-                    <a href="#"><i class='bx bxl-google' ></i></a>
-                    <a href="#"><i class='bx bxl-facebook' ></i></a>
-                    <a href="#"><i class='bx bxl-github' ></i></a>
-                    <a href="#"><i class='bx bxl-linkedin' ></i></a>
-                </div>
-            </form>
+    <div class="form-box login">
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <h1>Login</h1>
+        <div class="input-box">
+          <input type="text" formControlName="username" placeholder="Username" required>
+          <i class='bx bxs-user'></i>
         </div>
-
-        <div class="form-box register">
-            <form (ngSubmit)="Register()" [formGroup]="registrationForm">
-                <h1>Registration</h1>
-                <div class="input-box">
-                    <input type="text" formControlName="username" placeholder="Username">
-                    <i class='bx bxs-user'></i>
-                </div>
-                <div class="input-box">
-                    <input type="text" formControlName="name" placeholder="name">
-                    <i class='bx bxs-user'></i>
-                </div>
-                <div class="input-box">
-                    <input type="email" formControlName="email" placeholder="Email">
-                    <i class='bx bxs-envelope' ></i>
-                </div>
-                <div class="input-box">
-                    <input type="phone" formControlName="phone" placeholder="phone">
-                    <i class='bx bxs-lock-alt' ></i>
-                </div>
-                <div class="input-box">
-                    <input type="bloodGroup" formControlName="bloodGroup" placeholder="bloodGroup">
-                    <i class='bx bxs-lock-alt' ></i>
-                </div>
-                <div class="input-box">
-                    <input type="location" formControlName="location" placeholder="location">
-                    <i class='bx bxs-lock-alt' ></i>
-                </div>
-                <div class="input-box">
-                    <input type="role" formControlName="role" placeholder="role">
-                    <i class='bx bxs-lock-alt' ></i>
-                </div>
-                <div class="input-box">
-                    <input type="password" formControlName="password" placeholder="Password">
-                    <i class='bx bxs-lock-alt' ></i>
-                </div>
-                <button type="submit" class="btn">Register</button>
-                <p>or register with social platforms</p>
-                <div class="social-icons">
-                    <a href="#"><i class='fa fa-google' ></i></a>
-                    <a href="#"><i class='bx bxl-facebook' ></i></a>
-                    <a href="#"><i class='bx bxl-github' ></i></a>
-                    <a href="#"><i class='bx bxl-linkedin' ></i></a>
-                </div>
-            </form>
+        <div class="input-box">
+          <input type="password" formControlName="password" placeholder="Password" required>
+          <i class='bx bxs-lock-alt'></i>
         </div>
-
-        <div class="toggle-box">
-            <div class="toggle-panel toggle-left">
-                <h1>Hello, Welcome!</h1>
-                <p>Don't have an account?</p>
-                <button class="btn register-btn" (click)="toggleRegister()">Register</button>
-            </div>
-
-            <div class="toggle-panel toggle-right">
-                <h1>Welcome Back!</h1>
-                <p>Already have an account?</p>
-                <button class="btn login-btn" (click)="toggleLogin()">Login</button>
-            </div>
+        <div class="forgot-link">
+          <a href="#">Forgot Password?</a>
         </div>
+        <button type="submit" class="btn">Login</button>
+        <p>or login with social platforms</p>
+        <div class="social-icons">
+          <a href="#"><i class='bx bxl-google'></i></a>
+          <a href="#"><i class='bx bxl-facebook'></i></a>
+          <a href="#"><i class='bx bxl-github'></i></a>
+          <a href="#"><i class='bx bxl-linkedin'></i></a>
+        </div>
+      </form>
     </div>
+  
+    <div class="form-box register" style="height: 28rem;">
+      <form (ngSubmit)="Register()" [formGroup]="registrationForm">
+        <h1>Registration</h1>
+        <div class="input-box">
+          <input type="text" formControlName="username" placeholder="Username">
+          <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+          <input type="text" formControlName="name" placeholder="Full Name">
+          <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+          <input type="email" formControlName="email" placeholder="Email">
+          <i class='bx bxs-envelope'></i>
+        </div>
+        <div class="input-box">
+          <input type="tel" formControlName="phone" placeholder="Phone">
+          <i class='bx bxs-phone'></i>
+        </div>
+        <div class="input-box">
+          <select formControlName="bloodGroup" class="form-select">
+            <option value="" disabled selected>Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+        <div class="input-box">
+          <input type="text" formControlName="location" placeholder="Location">
+          <i class='bx bxs-map'></i>
+        </div>
+        <div class="input-box">
+          <input type="password" formControlName="password" placeholder="Password">
+          <i class='bx bxs-lock-alt'></i>
+        </div>
+        <button type="submit" class="btn">Register</button>
+        <p>or register with social platforms</p>
+        <div class="social-icons">
+          <a href="#"><i class='bx bxl-google'></i></a>
+          <a href="#"><i class='bx bxl-facebook'></i></a>
+          <a href="#"><i class='bx bxl-github'></i></a>
+          <a href="#"><i class='bx bxl-linkedin'></i></a>
+        </div>
+      </form>
+    </div>
+  
+    <div class="toggle-box">
+      <div class="toggle-panel toggle-left">
+        <h1>Hello, Welcome!</h1>
+        <p>Don't have an account?</p>
+        <button class="btn register-btn" (click)="toggleRegister()">Register</button>
+      </div>
+  
+      <div class="toggle-panel toggle-right">
+        <h1>Welcome Back!</h1>
+        <p>Already have an account?</p>
+        <button class="btn login-btn" (click)="toggleLogin()">Login</button>
+      </div>
+    </div>
+  </div>

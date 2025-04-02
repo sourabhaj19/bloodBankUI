@@ -9,16 +9,11 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         @for (item of menuItems; track item.title) {
-          @if (currentUser && item.afterLogin) {
-            <!-- Show ONLY if logged in AND item is marked `afterLogin: true` -->
+          @if ((currentUser && item.afterLogin) || (!currentUser && !item.afterLogin)) {
             <li class="nav-item">
-              <a class="nav-link text-white" [routerLink]="item.link">{{ item.title }}</a>
-            </li>
-          }
-          @if (!currentUser && !item.afterLogin) {
-            <!-- Show ONLY if NOT logged in AND item is marked `afterLogin: false` -->
-            <li class="nav-item">
-              <a class="nav-link text-white" [routerLink]="item.link">{{ item.title }}</a>
+              <a class="nav-link text-white" [routerLink]="item.link">
+                <i class="{{ item.icon }}"></i> {{ item.title }}
+              </a>
             </li>
           }
         }
@@ -26,22 +21,22 @@
 
       <!-- Profile Picture Dropdown -->
       @if (currentUser) {
-      {{ currentUser?.name }} &nbsp;&nbsp;&nbsp;
-      <div class="dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="/profile.png" alt="Profile" class="rounded-circle profile-img">
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-          <li><a class="dropdown-item" href="#">Profile</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
-        </ul>
-      </div>
-    }@else{
-      <form class="d-flex">
-        <button type="button" class="btn btn-outline-light" [routerLink]="['/login']">Login</button>
-      </form>
-    }
+        {{ currentUser?.name }} &nbsp;&nbsp;&nbsp;
+        <div class="dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="/profile.png" alt="Profile" class="rounded-circle profile-img">
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+          </ul>
+        </div>
+      } @else {
+        <form class="d-flex">
+          <button type="button" class="btn btn-outline-light" [routerLink]="['/login']">Login</button>
+        </form>
+      }
     </div>
   </div>
 </nav>
