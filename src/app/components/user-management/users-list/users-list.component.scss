@@ -1,0 +1,84 @@
+.user-profile-card {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background: white;
+}
+
+.profile-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.profile-table th,
+.profile-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  vertical-align: top;
+}
+
+.profile-table th {
+  width: 150px;
+  color: #555;
+  font-weight: normal;
+}
+
+/* Blood Group Highlight */
+.blood-group {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  background-color: #ffcccc;
+  color: #cc0000;
+}
+/* Gender Badges */
+.gender-badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  margin-left: 10px;
+}
+
+.male {
+  background-color: #d4e6ff;
+  color: #0066cc;
+}
+
+.female {
+  background-color: #ffd4f0;
+  color: #cc0066;
+}
+
+/* Availability Status */
+.available {
+  color: green;
+}
+
+.not-available {
+  color: #e63946;
+}
+
+/* Leaflet Map Container */
+.leaflet-container {
+  height: 400px !important;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+
+  .profile-table th,
+  .profile-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .profile-table th {
+    padding-top: 20px;
+    border-bottom: none;
+  }
+}

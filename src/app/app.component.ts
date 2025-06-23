@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MENU_ITEMS } from './pages.menu';
 import { HeaderComponent } from './components/header/header.component';
-import { AuthService } from './services/auth.service';
+import { LoaderService } from './services/loader.service';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent],
+  imports: [ HeaderComponent, NzSpinModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -14,50 +13,14 @@ import { AuthService } from './services/auth.service';
 export class AppComponent implements OnInit {
   menu: any[] = [];
   userRoleForMenu: string = '';
-
-  constructor(private authService: AuthService) {}
-
-
-  ngOnInit() {
-    // Subscribe to auth changes
-    this.authService.currentUser$.subscribe(() => {
-      this.updateMenu();
-    });
-    this.updateMenu(); // Initial load
-  }
-
-  updateMenu() {
-    const role = this.authService.getCurrentRole();
-    this.menu = this.getMenuCopy(); // Deep copy
-
-    // Role display mapping
-    const roleMapping: Record<string, string> = {
-      'ROLE_ADMIN': 'Administrator',
-      'ROLE_BRANCH_USER': 'BRANCH USER',
-      // Add other roles as needed
-    };
-
-    if (role && roleMapping[role]) {
-      this.userRoleForMenu = roleMapping[role];
-      this.menu[0].title = `ROLE: ${this.userRoleForMenu}`;
-      this.menu = this.filterByRole(this.menu, role);
+   isSpinning = false;
+  
+  constructor(private loader: LoaderService) { }
+  
+    ngOnInit(): void {
+      this.loader.loadState.subscribe(res => {
+        console.log("LoaderComponent: Loader state changed to", res);
+        this.isSpinning = res;
+      });
     }
-  }
-
-  getMenuCopy(): any[] {
-    return JSON.parse(JSON.stringify(MENU_ITEMS)); // Deep clone
-  }
-
-  filterByRole(menuItems: any[], role: string): any[] {
-    return menuItems.filter(item => {
-      // Include item if no role restriction or role matches
-      const roleAllowed = !item.role || item.role.includes(role);
-      if (roleAllowed && item.children) {
-        item.children = item.children.filter((child: any) => 
-          !child.role || child.role.includes(role)
-        );
-      }
-      return roleAllowed;
-    });
-  }
 }

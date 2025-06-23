@@ -1,25 +1,40 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<any>(null);
-  currentUser$ = this.currentUserSubject.asObservable(); // Observable for components
+  private userRoleSubject = new BehaviorSubject<string>('PUBLIC');
+  userRole$ = this.userRoleSubject.asObservable();
 
-  // Call this when user logs in
-  login(user: any) {
-    sessionStorage.setItem('role', user.role); // Store role
-    this.currentUserSubject.next(user); // Notify subscribers
+  constructor() {
+    const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+    this.userRoleSubject.next(user?.user?.role || 'PUBLIC');
   }
 
-  // Call this when user logs out
+  setUser(user: any) {
+    sessionStorage.setItem('user', JSON.stringify(user));
+    this.userRoleSubject.next(user?.user?.role || 'PUBLIC');
+  }
+
   logout() {
-    sessionStorage.removeItem('role');
-    this.currentUserSubject.next(null); // Notify subscribers
+    sessionStorage.clear();
+    this.userRoleSubject.next('PUBLIC');
   }
 
-  // Get current role (optional)
-  getCurrentRole(): string | null {
-    return sessionStorage.getItem('role');
+  isAuthenticated(): boolean {
+    // Return true if user is logged in
+    return !!localStorage.getItem('authToken');
+  }
+
+  getRole(): string | null {
+    // Return user role from JWT or session
+    return localStorage.getItem('userRole');
+  }
+
+  getUsername(): string {
+    // Return current username
+    return localStorage.getItem('username') || 'User';
   }
 }

@@ -1,109 +1,78 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormGroup, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { apiSevrvice } from '../../services/apiService';
+// login.component.ts
+import { Component, inject } from '@angular/core';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzIconModule, NZ_ICONS } from 'ng-zorro-antd/icon';
+import { UserOutline, LockOutline } from '@ant-design/icons-angular/icons';
+import { Router, RouterModule } from '@angular/router';
+import { apiService } from '../../services/apiService';
+import { getFilteredMenu } from './../../menu';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports : [ReactiveFormsModule],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    NzButtonModule,
+    NzFormModule,
+    NzInputModule,
+    NzCheckboxModule,
+    NzCardModule,
+    NzIconModule,
+    RouterModule
+  ],
+  providers: [
+    { provide: NZ_ICONS, useValue: [UserOutline, LockOutline] }
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements AfterViewInit, OnInit {
-  @ViewChild('container') container!: ElementRef;
+export class LoginComponent {
+  private fb = inject(NonNullableFormBuilder);
+  private apiService = inject(apiService);
+  private router = inject(Router);
+  private authService = inject(AuthService);
 
-  loginForm!: FormGroup; // Ensure correct initialization
-  registrationForm!: FormGroup; // Ensure correct initialization
+  loginForm = this.fb.group({
+    email: this.fb.control('', [Validators.required]),
+    password: this.fb.control('', [Validators.required]),
+    remember: this.fb.control(true)
+  });
 
-  constructor(private route: Router, private fb: FormBuilder, private apiservice : apiSevrvice, private authService: AuthService) {}
-
-  ngOnInit() {
-    this.getLocation()
-    // Using FormBuilder for cleaner form initialization
-    this.loginForm = this.fb.group({
-      username: ['', [Validators.required]],
-      password: ['', Validators.required]
-    });
-
-    this.registrationForm = this.fb.group({
-      name: ['',Validators.required],
-      username: ['',Validators.required],
-      phone: ['',Validators.required],
-      email: ['',Validators.required],
-      password: ['',Validators.required],
-      bloodGroup: ['',Validators.required],
-      location: ['',Validators.required],
-      role: ['',Validators.required],
-      isAvailable: [true,Validators.required],
-      latitude: ['',Validators.required],
-      longitude: ['',Validators.required]
-    })
-
-  }
-
-  ngAfterViewInit() {
-    // Ensure ViewChild is initialized before usage
-  }
-
-  toggleRegister() {
-    if (this.container) {
-      this.container.nativeElement.classList.add('active');
-    }
-  }
-
-  toggleLogin() {
-    if (this.container) {
-      this.container.nativeElement.classList.remove('active');
-    }
-  }
-
-  login() {
-    console.log(this.loginForm.value)
+  submitForm(): void {
     if (this.loginForm.valid) {
-      this.apiservice.login(this.loginForm.value).subscribe({
-        next : (res:any)=>{
-          this.authService.login({ role: 'ROLE_ADMIN' }); 
-          console.log(res)
-          sessionStorage.setItem('currentUser', JSON.stringify(res));
-          sessionStorage.setItem('token', res.token)
-          this.route.navigate(['/dashboard'], { state: { data: res } });
+      // In a real app, you would call your authentication API here
+      console.log('Login form submitted', this.loginForm.value);
+      this.apiService.login(this.loginForm.value).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          sessionStorage.setItem('user', JSON.stringify(res));
+          this.authService.setUser(res); // Pass the actual response object
+          this.router.navigate(['/dashboard']);  
         },
         error: (err) => {
-
+          console.error(err);
+          alert('Invalid username or password');
         }
-      })
-      console.log('Login successful', this.loginForm.value);
-    } else {
-      console.log('Invalid login form');
-    }
-  }
-
-  Register(){
-    console.log(this.registrationForm.value)
-    if (this.registrationForm.valid) {
-      this.apiservice.register(this.registrationForm.value).subscribe({
-        next(value) {
-          console.log(value)
-        },
-      })
-      console.log('Login successful', this.registrationForm.value);
-    } else {
-      console.log('Invalid login form');
+      });
     }
   }
 
   getLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.registrationForm.controls['latitude'].setValue(position.coords.latitude)
-        this.registrationForm.controls['longitude'].setValue(position.coords.longitude);
-      }, (error) => {
-          console.log(error)
-          // Handle error, e.g. display an error message
-        });
-    } else {
-      // Handle the case where geolocation is not supported
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position.coords);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     }
   }
 }

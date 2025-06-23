@@ -1,0 +1,156 @@
+<nz-card nzTitle="Registration" [nzBordered]="false">
+  <form nz-form [formGroup]="registrationForm" (ngSubmit)="submitForm()">
+    <div nz-row [nzGutter]="16">
+      <!-- Full Name -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your fullName!">
+            <nz-input-group nzPrefixIcon="user">
+              <input type="text" nz-input formControlName="fullName" placeholder="Full Name" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Email -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your email!">
+            <nz-input-group nzPrefixIcon="mail">
+              <input type="email" nz-input autocomplete="username" formControlName="email" placeholder="Email" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Phone -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your phone!">
+            <nz-input-group nzPrefixIcon="phone" [nzAddOnBefore]="addOnBeforeTemplate">
+              <input type="text" nz-input formControlName="phone" placeholder="Phone" />
+            </nz-input-group>
+            <ng-template #addOnBeforeTemplate>
+              <nz-select formControlName="phoneprefix" style="width: 80px">
+                <nz-option nzLabel="+91" nzValue="+91"></nz-option>
+                <nz-option nzLabel="+92" nzValue="+92"></nz-option>
+              </nz-select>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Password -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your password!">
+            <nz-input-group nzPrefixIcon="lock">
+              <input type="password" autocomplete="current-password" nz-input formControlName="password"
+                placeholder="Password" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Blood Group -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your blood group!">
+            <nz-select nzAllowClear nzPlaceHolder="Blood Group" formControlName="bloodGroup">
+              <nz-option nzValue="A+" nzLabel="A+"></nz-option>
+              <nz-option nzValue="B+" nzLabel="B+"></nz-option>
+              <nz-option nzValue="O+" nzLabel="O+"></nz-option>
+              <nz-option nzValue="AB+" nzLabel="AB+"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Age -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your age!">
+            <nz-input-group>
+              <input type="number" nz-input formControlName="age" placeholder="Age" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Gender -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your gender!">
+            <nz-select nzAllowClear nzPlaceHolder="Gender" formControlName="gender">
+              <nz-option nzValue="male" nzLabel="Male"></nz-option>
+              <nz-option nzValue="female" nzLabel="Female"></nz-option>
+              <nz-option nzValue="other" nzLabel="Other"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- isAvailable -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your isAvailable!">
+            <nz-select nzPlaceHolder="isAvailable" formControlName="isAvailable">
+              <nz-option [nzValue]="false" nzLabel="No"></nz-option>
+              <nz-option [nzValue]="true" nzLabel="Yes"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- dob -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+              <nz-form-control nzHasFeedback nzErrorTip=" dob is required.">
+                  <nz-date-picker formControlName="dob" id="dob"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+      </div>
+
+      <!-- city -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your city!">
+            <nz-select nzPlaceHolder="city" formControlName="city">
+              <nz-option nzValue="city0" nzLabel="city1"></nz-option>
+              <nz-option nzValue="city1" nzLabel="city2"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- willingToDonate -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your state!">
+            <nz-select nzPlaceHolder="state" formControlName="state">
+              <nz-option nzValue="state1" nzLabel="state1"></nz-option>
+              <nz-option nzValue="state2" nzLabel="state2"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- address -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your address!">
+            <nz-input-group>
+              <input type="textarea" nz-input formControlName="address" placeholder="address" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+    </div>
+
+    <!-- Submit Button -->
+    <div style="text-align: right; margin-top: 20px;">
+      <button nz-button [nzType]="'primary'">Register</button>
+    </div>
+  </form>
+</nz-card>

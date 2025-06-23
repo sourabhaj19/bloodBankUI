@@ -1,1 +1,88 @@
-<p>find-blood works!</p>
+<nz-card nzTitle="Find BLood" [nzBordered]="false">
+  <form nz-form [formGroup]="searchBloodForm" (ngSubmit)="submitForm(this.searchBloodForm.value)">
+    <div nz-row [nzGutter]="16">
+    
+      <!-- Blood Group -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your blood group!">
+            <nz-select nzAllowClear nzPlaceHolder="Blood Group" formControlName="bloodGroup">
+              <nz-option nzValue="A+" nzLabel="A+"></nz-option>
+              <nz-option nzValue="B+" nzLabel="B+"></nz-option>
+              <nz-option nzValue="O+" nzLabel="O+"></nz-option>
+              <nz-option nzValue="AB+" nzLabel="AB+"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Gender -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your gender!">
+            <nz-select nzAllowClear nzPlaceHolder="Gender" formControlName="gender">
+              <nz-option nzValue="male" nzLabel="Male"></nz-option>
+              <nz-option nzValue="female" nzLabel="Female"></nz-option>
+              <nz-option nzValue="other" nzLabel="Other"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- city -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your city!">
+            <nz-select nzPlaceHolder="city" formControlName="city">
+              <nz-option nzValue="city0" nzLabel="city1"></nz-option>
+              <nz-option nzValue="city1" nzLabel="city2"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- state -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your state!">
+            <nz-select nzPlaceHolder="state" formControlName="state">
+              <nz-option nzValue="state1" nzLabel="state1"></nz-option>
+              <nz-option nzValue="state2" nzLabel="state2"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+
+    @if(listOfSearchBlood.length >0){
+    <nz-table #basicTable [nzData]="listOfSearchBlood">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>phone</th>
+          <th>email</th>
+          <th>Address</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (data of basicTable.data; track data) {
+        <tr>
+          <td>{{ data.fullName }}</td>
+          <td>{{ data.age }}</td>
+          <td>{{ data.phoneprefix }}-{{ data.phone }}</td>
+          <td>{{ data.email }}</td>
+          <td>{{ data.address }}</td>
+          <td>
+            <button nz-button nzType="primary" nzSize="small">
+              View on Map
+              </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </nz-table>
+  }
+</nz-card>

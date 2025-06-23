@@ -1,0 +1,96 @@
+<p>dashboard works</p>
+
+User Logged in Successfully
+<p>Welcome {{ currentUser?.fullName }}</p>
+<nz-content>
+  <div class="inner-content">
+    <!-- Stats Cards Row -->
+    <div nz-row [nzGutter]="16" class="stats-row">
+      <div nz-col [nzSpan]="6">
+        <nz-card class="stat-card">
+          <div class="stat-content">
+            <h3>Total Donors</h3>
+            <p class="stat-value">1,248</p>
+            <nz-tag nzColor="green">+12 this week</nz-tag>
+          </div>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-card class="stat-card">
+          <div class="stat-content">
+            <h3>Active Donations</h3>
+            <p class="stat-value">86</p>
+            <nz-tag nzColor="blue">Ready</nz-tag>
+          </div>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-card class="stat-card">
+          <div class="stat-content">
+            <h3>Blood Requests</h3>
+            <p class="stat-value">24</p>
+            <nz-tag nzColor="orange">Pending</nz-tag>
+          </div>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-card class="stat-card">
+          <div class="stat-content">
+            <h3>Urgent Needs</h3>
+            <p class="stat-value">5</p>
+            <nz-tag nzColor="red">Critical</nz-tag>
+          </div>
+        </nz-card>
+      </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <nz-card nzTitle="Recent Donations" class="recent-card">
+      <nz-list nzItemLayout="horizontal" [nzDataSource]="recentDonations">
+        <ng-template #item let-item>
+          <nz-list-item>
+            <nz-list-item-meta [nzTitle]="item.donor" [nzDescription]="'Donated ' + item.bloodType">
+              <ng-template #nzAvatar>
+                <nz-avatar nzIcon="user"></nz-avatar>
+              </ng-template>
+            </nz-list-item-meta>
+            <div>{{ item.date }}</div>
+            <nz-tag [nzColor]="item.status === 'Completed' ? 'green' : 'orange'">
+              {{ item.status }}
+            </nz-tag>
+          </nz-list-item>
+        </ng-template>
+      </nz-list>
+    </nz-card>
+
+    <!-- Quick Actions -->
+    <nz-card nzTitle="Quick Actions" class="actions-card">
+      <div nz-row [nzGutter]="16">
+        <div nz-col [nzSpan]="6">
+          <button nz-button nzType="primary" nzBlock>
+            <span nz-icon nzType="plus"></span>
+            Add Donor
+          </button>
+        </div>
+        <div nz-col [nzSpan]="6">
+          <button nz-button nzType="default" nzBlock>
+            <span nz-icon nzType="search"></span>
+            Find Blood
+          </button>
+        </div>
+        <div nz-col [nzSpan]="6">
+          <button nz-button nzType="dashed" nzBlock>
+            <span nz-icon nzType="notification"></span>
+            Send Alert
+          </button>
+        </div>
+        <div nz-col [nzSpan]="6">
+          <button nz-button nzType="dashed" nzBlock>
+            <span nz-icon nzType="calendar"></span>
+            Schedule Drive
+          </button>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</nz-content>

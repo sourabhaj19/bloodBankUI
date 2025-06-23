@@ -1,128 +1,124 @@
-<div>
-  
-  <!-- navbar ends -->
-  
-  <!-- home section -->
-  <div class="banner">
-   
-  </div>
-  
-  
-  <!-- home section ends -->
-  
-  
-  <!-- about section -->
-  
+
+
+<div class="container-fluid p-0">
+  <!-- Banner Section with NzCarousel -->
+  <nz-carousel nzAutoPlay class="banner-carousel">
+    <div nz-carousel-content *ngFor="let image of bannerImages">
+      <img [src]="image" alt="Blood donation banner" class="carousel-image">
+    </div>
+  </nz-carousel>
+
+  <!-- About Section -->
   <div class="about-container" id="about">
-    <div class="hero-section">
-      <h1>Saving Lives, One Drop at a Time</h1>
-      <p>Your donation can be someone's hope for tomorrow.</p>
-      <button class="donate-btn">Donate Now</button>
-    </div>
-  
+    <nz-card class="hero-card" [nzBordered]="false">
+      <h1 nz-typography>Saving Lives, One Drop at a Time</h1>
+      <p nz-typography>Your donation can be someone's hope for tomorrow.</p>
+      <button nz-button nzType="primary" nzSize="large" nzDanger class="donate-btn">Donate Now</button>
+    </nz-card>
+
     <div class="content-section">
-      <div class="card">
-        <h2>Our Mission</h2>
-        <p>
-          At <strong>LifeSaver Blood Bank</strong>, we are committed to providing a safe, efficient, and accessible blood donation system for those in need.
-        </p>
-      </div>
-  
-      <div class="card">
-        <h2>Why Donate?</h2>
-        <p>
-          Blood donation saves millions of lives each year. Your small effort can create a big impact. Join us in making a difference!
-        </p>
-      </div>
-  
-      <div class="card">
-        <h2>How We Work</h2>
-        <p>
-          We connect donors with recipients through a seamless and transparent system. Every drop counts, and every donor matters!
-        </p>
-      </div>
+      <nz-row [nzGutter]="[16, 16]">
+        <nz-col [nzSpan]="24" [nzMd]="8" *ngFor="let card of aboutCards">
+          <nz-card [nzTitle]="card.title" [nzHoverable]="true" class="content-card">
+            <p nz-typography>{{card.content}}</p>
+          </nz-card>
+        </nz-col>
+      </nz-row>
     </div>
-  
-    <div class="stats-section">
-      <div class="stat">
-        <h2 class="text-white">10,000+</h2>
-        <p>Donors Registered</p>
-      </div>
-      <div class="stat">
-        <h2 class="text-white">5,000+</h2>
-        <p>Lives Saved</p>
-      </div>
-      <div class="stat">
-        <h2 class="text-white">24/7</h2>
-        <p>Service Availability</p>
-      </div>
-    </div>
+
+    <nz-row [nzGutter]="16" class="stats-section">
+      <nz-col [nzSpan]="24" [nzMd]="8" *ngFor="let stat of stats">
+        <nz-card class="stat-card">
+          <h2 nz-typography class="text-white">{{stat.value}}</h2>
+          <p nz-typography>{{stat.label}}</p>
+        </nz-card>
+      </nz-col>
+    </nz-row>
   </div>
-  
-  
-  <!-- about end -->
-  
-  <!-- contact container start -->
-  
+
+  <!-- Contact Section -->
   <div class="contact-container" id="contact">
-    <!-- Hero Section -->
-    <div class="contact-hero">
-      <h1>Contact Us</h1>
-      <p>We’re here to help! Reach out to us for any queries or assistance.</p>
-    </div>
-  
-    <!-- Contact Details & Google Map -->
+    <nz-card class="contact-hero" [nzBordered]="false">
+      <h1 nz-typography>Contact Us</h1>
+      <p nz-typography>We're here to help! Reach out to us for any queries or assistance.</p>
+    </nz-card>
+
     <div class="container mt-5">
-      <div class="row" style="align-items: center;">
+      <nz-row [nzGutter]="[16, 16]" nzAlign="middle">
         <!-- Google Map -->
-        <div class="col-md-6">
-            <div class="mapouter"><div class="gmap_canvas"><iframe class="gmap_iframe" width="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=pune&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe><a href="https://sprunkin.com/">Sprunki</a></div><style>.mapouter{position:relative;text-align:right;width:100%;height:400px;}.gmap_canvas {overflow:hidden;background:none!important;width:100%;height:400px;}.gmap_iframe {height:400px!important;}</style></div>
-        </div>
-  
+        <nz-col [nzSpan]="24" [nzMd]="12">
+          <nz-card>
+            <div class="map-container">
+              <iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=pune&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+              </iframe>
+            </div>
+          </nz-card>
+        </nz-col>
+
         <!-- Contact Details -->
-        <div class="col-md-6">
-            <h2>Our Contact Details</h2>
-            <ul class="list-unstyled">
-              <li><i class="bi bi-geo-alt-fill"></i> 123, Blood Bank Street, Pune, India</li>
-              <li><i class="bi bi-envelope-fill"></i> contactlifesaverbloodbank.com</li>
-              <li><i class="bi bi-telephone-fill"></i> +91 98765 43210</li>
-              <li><i class="bi bi-clock-fill"></i> Open: 24/7</li>
+        <nz-col [nzSpan]="24" [nzMd]="12">
+          <nz-card nzTitle="Our Contact Details">
+            <ul nz-list>
+              <nz-list-item>
+                <i nz-icon nzType="environment" nzTheme="fill"></i> 123, Blood Bank Street, Pune, India
+              </nz-list-item>
+              <nz-list-item>
+                <i nz-icon nzType="mail" nzTheme="fill"></i> contact&#64;lifesaverbloodbank.com
+              </nz-list-item>
+              <nz-list-item>
+                <i nz-icon nzType="phone" nzTheme="fill"></i> +91 98765 43210
+              </nz-list-item>
+              <nz-list-item>
+                <i nz-icon nzType="clock-circle" nzTheme="fill"></i> Open: 24/7
+              </nz-list-item>
             </ul>
-        </div>
-      </div>
-  
+          </nz-card>
+        </nz-col>
+      </nz-row>
+
       <!-- Contact Form -->
-      <div class="row mt-5">
-        <div class="col-md-12">
-          <div class="contact-form card p-4">
-            <h2>Get in Touch</h2>
-            <form>
-              <div class="mb-3 ">
-                <label for="name" class="form-label">Your Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter your name">
-              </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">Your Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email">
-              </div>
-              <div class="mb-3">
-                <label for="message" class="form-label">Your Message</label>
-                <textarea class="form-control" id="message" rows="4" placeholder="Write your message here"></textarea>
-              </div>
-              <button type="submit" class="btn btn-danger w-100">Send Message</button>
+      <nz-row class="mt-5">
+        <nz-col [nzSpan]="24">
+          <nz-card nzTitle="Get in Touch" class="contact-form">
+            <form nz-form [formGroup]="contactForm">
+              <nz-form-item>
+                <nz-form-label nzRequired>Your Name</nz-form-label>
+                <nz-form-control>
+                  <input nz-input formControlName="name" placeholder="Enter your name">
+                </nz-form-control>
+              </nz-form-item>
+
+              <nz-form-item>
+                <nz-form-label nzRequired>Your Email</nz-form-label>
+                <nz-form-control>
+                  <input nz-input type="email" formControlName="email" placeholder="Enter your email">
+                </nz-form-control>
+              </nz-form-item>
+
+              <nz-form-item>
+                <nz-form-label nzRequired>Your Message</nz-form-label>
+                <nz-form-control>
+                  <textarea nz-input formControlName="message" rows="4"
+                    placeholder="Write your message here"></textarea>
+                </nz-form-control>
+              </nz-form-item>
+
+              <button nz-button nzType="primary" nzSize="large" nzBlock nzDanger>Send Message</button>
             </form>
-          </div>
-        </div>
-      </div>
+          </nz-card>
+        </nz-col>
+      </nz-row>
     </div>
   </div>
-  <!-- contact end -->
-    <!-- FOOTER -->
-  
-  <footer class="footer mt-5">
+
+  <!-- Footer -->
+  <footer class="footer">
     <div class="container">
-        <p>&copy; 2025 LifeSaver Blood Bank. All Rights Reserved.</p>
-        <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+      <p nz-typography>&copy; 2025 LifeSaver Blood Bank. All Rights Reserved.</p>
+      <p nz-typography>
+        <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+      </p>
     </div>
-  </footer>
-  </div>
+    </footer>
+</div>

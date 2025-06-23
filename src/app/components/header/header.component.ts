@@ -1,39 +1,48 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { MENU_ITEMS } from '../../pages.menu';
-import { AuthService } from '../../services/auth.service'; // Import AuthService
+// header.component.ts
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { getFilteredMenu } from './../../menu';
+import { AuthService } from '../../services/auth.service';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
 @Component({
   selector: 'app-header',
+  templateUrl: 'header.component.html',
+  styleUrls: ['header.component.scss'],
   standalone: true,
-  imports: [RouterLink, CommonModule],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  imports: [
+    CommonModule, NzMenuModule,
+    NzBreadCrumbModule, NzIconModule, NzLayoutModule, RouterOutlet, RouterModule
+  ],
 })
 export class HeaderComponent implements OnInit {
-  menuItems: any[] = MENU_ITEMS;
-  currentUser: any;
+  route = inject(Router);
+  isCollapsed = true;
+  filteredMenuItems: any[] = [];
+  isLoggedIn = false;
+  username = '';
 
-  constructor(
-    private router: Router,
-    private authService: AuthService // Inject AuthService
-  ) {}
+  constructor(public authService: AuthService) { }
 
   ngOnInit(): void {
-    // Subscribe to auth state changes
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
+    this.authService.userRole$.subscribe((role) => {
+      this.filteredMenuItems = getFilteredMenu(role);
+      this.isLoggedIn = role !== 'PUBLIC';
+      this.username = this.authService.getUsername();
     });
-
-    // Initialize with current user from session
-    const user = sessionStorage.getItem('currentUser');
-    this.currentUser = user ? JSON.parse(user) : null;
   }
 
-  logout() {
-    this.authService.logout(); // Use AuthService for logout
+  onLogout() {
     sessionStorage.clear();
-    this.router.navigate(['/home']);
+    this.authService.logout();
+    this.route.navigate(['/']);
+  }
+
+  navigateTo(route: string): void {
+    this.route.navigate([route]);
+    this.isCollapsed = true;
   }
 }
