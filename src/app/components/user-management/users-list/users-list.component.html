@@ -28,7 +28,7 @@
             <!-- Delete Button (Danger Red) -->
             <button class="m-1" nz-button nzType="primary" nzDanger nzSize="small">Delete</button>
 
-            <button class="m-1" (click)="showUserOnMap(data)">View on Map</button>
+            <button nz-button nzType="primary" nzSize="small" class="m-1" (click)="showUserOnMap(data)">View on Map</button>
           </td>
         </tr>
         }
@@ -37,8 +37,7 @@
   }
 
 
-  <div class="leaflet-container" style="height: 400px; width: 100%;" leaflet [leafletOptions]="options" [leafletLayers]="markers">
-    </div>
+  <div id="map"></div>
 
   <!-- view Model -->
 

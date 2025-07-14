@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -11,6 +11,7 @@ import { NzTableFilterFn, NzTableFilterList, NzTableModule, NzTableSortFn, NzTab
 import { apiService } from '../../services/apiService';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import L from 'leaflet';
 
 
 interface ItemData {
@@ -36,7 +37,8 @@ interface ColumnItem {
   templateUrl: './find-blood.component.html',
   styleUrl: './find-blood.component.scss'
 })
-export class FindBloodComponent {
+export class FindBloodComponent implements AfterViewInit{
+  private map!: L.Map;
   apiService = inject(apiService);
   filterquery  : String = ''
   listOfSearchBlood : any = [];
@@ -53,6 +55,7 @@ export class FindBloodComponent {
       bloodGroup: [null] ,         // e.g. 'A+', 'O-', etc.
       city: [null],
       state: [null],
+      country: [null],
       gender: [null]
     });
     
@@ -62,9 +65,36 @@ export class FindBloodComponent {
   }
 
   submitForm(filterObject:any){
-    this.apiService.searchBlood(filterObject).subscribe((data) => {
-      this.listOfSearchBlood = data.body;
+    const constructedFilterObject = {
+      'bloodGroup.equals': filterObject.bloodGroup || null,
+      'city.equals': filterObject.city || null,
+      'state.equals': filterObject.state || null,
+      'gender.equals': filterObject.gender || null,
+      'country.equals': filterObject.country || null,
+    };
+    this.apiService.getUsers(constructedFilterObject).subscribe((data:any) => {
+      console.log(data);
+      this.listOfSearchBlood = data.body.content;
     });
+  }
+
+  ngAfterViewInit(): void {
+    console.log('FindBloodComponent: AfterViewInit called');
+    this.initMap();
+  }
+
+  private initMap(): void {
+    this.map = L.map('map').setView([16.451078, 74.398695], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19
+    }).addTo(this.map);
+  }
+
+  showUserOnMap(user: any) {
+    console.log('Show user on map:', user);
+    this.map.setView([user.latitude, user.longitude], 13);
+    const marker = L.marker([user.latitude, user.longitude]).addTo(this.map)
+    marker.bindPopup(`Name: ${user.fullName}<br>Gender: ${user.gender}<br>Phone: ${user.phoneprefix}-${user.phone}`).openPopup();
   }
 
 }

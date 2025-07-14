@@ -61,13 +61,6 @@
   color: #e63946;
 }
 
-/* Leaflet Map Container */
-.leaflet-container {
-  height: 400px !important;
-  width: 100%;
-  z-index: 1;
-}
-
 /* Responsive Design */
 @media (max-width: 600px) {
 
@@ -81,4 +74,8 @@
     padding-top: 20px;
     border-bottom: none;
   }
+}
+
+#map {
+  height: 400px;
 }

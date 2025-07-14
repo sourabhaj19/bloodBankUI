@@ -10,7 +10,6 @@ import { NzIconModule, NZ_ICONS } from 'ng-zorro-antd/icon';
 import { UserOutline, LockOutline } from '@ant-design/icons-angular/icons';
 import { Router, RouterModule } from '@angular/router';
 import { apiService } from '../../services/apiService';
-import { getFilteredMenu } from './../../menu';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -57,7 +56,6 @@ export class LoginComponent {
         },
         error: (err) => {
           console.error(err);
-          alert('Invalid username or password');
         }
       });
     }

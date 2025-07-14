@@ -2,13 +2,14 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { provideRouter } from '@angular/router';
 import { provideNzIcons } from 'ng-zorro-antd/icon';
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { icons } from './icons-provider';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { en_US, provideNzI18n } from 'ng-zorro-antd/i18n';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import { ToasterInterceptor } from './interceptors/toaster.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,9 +18,23 @@ export const appConfig: ApplicationConfig = {
     provideNzIcons(icons),
     provideAnimations(),
     provideNzI18n(en_US),
+    provideHttpClient(withInterceptorsFromDi()),
     importProvidersFrom(NzDropDownModule),
-    provideHttpClient(
-      withInterceptors([TokenInterceptor, LoaderInterceptor]) // Functional interceptor
-    )
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ToasterInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
+    },
+
   ]
 };

@@ -8,6 +8,7 @@ export const MENU_ITEMS = [
   { title: 'Dashboard', link: '/dashboard', icon: 'dashboard', role: ['ROLE_USER'] },
   { title: 'Find Blood', link: '/find-blood', icon: 'search', role: ['ROLE_USER'] },
   { title: 'Users', link: '/users', icon: 'user', role: ['ROLE_ADMIN'] },
+  { title: 'Your Donates', link: '/your-donates', icon: 'dashboard', role: ['ROLE_USER'] },
   {
     title: 'Masters', icon: 'gift', role: ['ROLE_ADMIN'],
     childrens: [
@@ -15,5 +16,4 @@ export const MENU_ITEMS = [
       { title: 'Roles', link: '/center', icon: 'bank', role: ['ROLE_ADMIN'] }
     ]
   },
-  { title: 'Your Donates', link: '/your-donates', icon: 'gift', role: ['ROLE_USER'] }
 ];

@@ -1,77 +1,48 @@
 import { Component, OnInit } from '@angular/core';
 import { apiService } from '../../../services/apiService';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTableModule} from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { CommonModule } from '@angular/common';
-import { latLng, tileLayer, marker, Marker, icon } from 'leaflet';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import L from 'leaflet';
 
 @Component({
   selector: 'app-users-list',
-  standalone: true,
-  imports: [
-    NzTableModule,
-    NzButtonModule,
-    NzModalModule,
-    CommonModule,
-    LeafletModule
-  ],
+  imports: [NzTableModule, NzButtonModule, NzModalModule, CommonModule],
   templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.scss']
+  styleUrl: './users-list.component.scss'
 })
 export class UsersListComponent implements OnInit {
-  constructor(private apiService: apiService) { }
-
+  private map!: L.Map;
+  constructor(private apiService: apiService) {}
   listOfUsers: any[] = [];
-  modalData: any;
-  isConfirmLoading = false;
-
-  // Leaflet map options
-  options = {
-    layers: [
-      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; OpenStreetMap contributors'
-      })
-    ],
-    zoom: 13,
-    center: latLng(0, 0)
-  };
-
-  markers: Marker[] = [];
 
   ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
     this.getUsers();
-    this.fixLeafletAssets();
+  }
+  getUsers(){
+      this.apiService.getUsers().subscribe((data :any) => {
+        this.listOfUsers = data.body?.content;
+      });
   }
 
-  // Fix for Leaflet marker icons
-  private fixLeafletAssets() {
-    // Use public folder for marker icons (served from root)
-    const iconRetinaUrl = '/marker-icon-2x-red.png';
-    const iconUrl = '/marker-icon-red.png';
-    const shadowUrl = '/marker-shadow.png';
-    const iconDefault = icon({
-      iconRetinaUrl,
-      iconUrl,
-      shadowUrl,
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      tooltipAnchor: [16, -28],
-      shadowSize: [41, 41]
-    });
-    Marker.prototype.options.icon = iconDefault;
+  ngAfterViewInit(): void {
+    this.initMap();
   }
 
-  getUsers() {
-    this.apiService.getUsers().subscribe((data: any) => {
-      this.listOfUsers = data.body?.content;
-    });
+  private initMap(): void {
+    this.map = L.map('map').setView([16.451078, 74.398695], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19
+    }).addTo(this.map);
   }
 
-  showModal(data: any): void {
+  modalData : any;
+  isConfirmLoading = false;
+
+  showModal(data:any): void {
     this.modalData = data;
   }
 
@@ -88,22 +59,9 @@ export class UsersListComponent implements OnInit {
   }
 
   showUserOnMap(user: any) {
-    if (user?.latitude && user?.longitude) {
-      const position = latLng(user.latitude, user.longitude);
-      this.options = {
-        ...this.options,
-        center: position
-      };
-      this.markers = [
-        marker(position, {
-          icon: icon({
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            iconUrl: '/marker-icon-red.png',
-            shadowUrl: '/marker-shadow.png'
-          })
-        })
-      ];
-    }
+    console.log('Show user on map:', user);
+    this.map.setView([user.latitude, user.longitude], 13);
+    const marker =L.marker([user.latitude, user.longitude]).addTo(this.map)
+    marker.bindPopup(`Name: ${user.fullName}<br>Gender: ${user.gender}<br>Phone: ${user.phoneprefix}-${user.phone}`).openPopup();
   }
 }

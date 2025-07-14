@@ -58,9 +58,13 @@
           <nz-form-control nzErrorTip="Please input your blood group!">
             <nz-select nzAllowClear nzPlaceHolder="Blood Group" formControlName="bloodGroup">
               <nz-option nzValue="A+" nzLabel="A+"></nz-option>
+              <nz-option nzValue="A-" nzLabel="A-"></nz-option>
               <nz-option nzValue="B+" nzLabel="B+"></nz-option>
-              <nz-option nzValue="O+" nzLabel="O+"></nz-option>
+              <nz-option nzValue="B-" nzLabel="B-"></nz-option>
               <nz-option nzValue="AB+" nzLabel="AB+"></nz-option>
+              <nz-option nzValue="AB-" nzLabel="AB-"></nz-option>
+              <nz-option nzValue="O+" nzLabel="O+"></nz-option>
+              <nz-option nzValue="O-" nzLabel="O-"></nz-option>              
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -90,29 +94,35 @@
         </nz-form-item>
       </div>
 
-      <!-- isAvailable -->
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
-        <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your isAvailable!">
-            <nz-select nzPlaceHolder="isAvailable" formControlName="isAvailable">
-              <nz-option [nzValue]="false" nzLabel="No"></nz-option>
-              <nz-option [nzValue]="true" nzLabel="Yes"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
+     
 
       <!-- dob -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-              <nz-form-control nzHasFeedback nzErrorTip=" dob is required.">
+              <nz-form-control placeholder="Select date of birth" nzHasFeedback nzErrorTip=" dob is required.">
                   <nz-date-picker formControlName="dob" id="dob"></nz-date-picker>
               </nz-form-control>
             </nz-form-item>
       </div>
 
+      <!-- country -->
+      <!-- <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your country!">
+            <nz-select nzPlaceHolder="country" formControlName="country">
+              <nz-option [nzValue]="false" nzLabel="country1"></nz-option>
+              <nz-option [nzValue]="true" nzLabel="country2"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div> -->
+
+      
+      
+      
+
       <!-- city -->
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <!-- <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input your city!">
             <nz-select nzPlaceHolder="city" formControlName="city">
@@ -121,10 +131,10 @@
             </nz-select>
           </nz-form-control>
         </nz-form-item>
-      </div>
+      </div> -->
 
-      <!-- willingToDonate -->
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <!-- state -->
+      <!-- <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input your state!">
             <nz-select nzPlaceHolder="state" formControlName="state">
@@ -133,7 +143,7 @@
             </nz-select>
           </nz-form-control>
         </nz-form-item>
-      </div>
+      </div> -->
 
       <!-- address -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
