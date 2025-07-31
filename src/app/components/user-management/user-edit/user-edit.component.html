@@ -1,1 +1,277 @@
-<p>user-edit works!</p>
+<nz-card [nzBordered]="false" [nzTitle]="userForm.get('id')?.value ? 'Edit User' : 'Add User'" [nzExtra]="extraTemplate">
+
+  <form nz-form [formGroup]="userForm" class="user-form" (ngSubmit)="saveUser()">
+    <div nz-row nzGutter="16">
+      <!-- Full Name -->
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label nzRequired>Full Name</nz-form-label>
+          <nz-form-control [nzErrorTip]="fullNameErrorTpl">
+            <input nz-input formControlName="fullName" placeholder="Enter full name">
+            <ng-template #fullNameErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please enter full name
+              </ng-container>
+              <ng-container *ngIf="control.hasError('maxlength')">
+                Maximum 50 characters allowed
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+  
+      <!-- Email -->
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label nzRequired>Email</nz-form-label>
+          <nz-form-control [nzErrorTip]="emailErrorTpl">
+            <input nz-input formControlName="email" type="email" placeholder="Enter email">
+            <ng-template #emailErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please enter email
+              </ng-container>
+              <ng-container *ngIf="control.hasError('email')">
+                Please enter a valid email
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  
+    <div nz-row nzGutter="16">
+      <!-- Phone -->
+      <div nz-col nzSpan="8">
+        <nz-form-item>
+          <nz-form-label nzRequired>Phone Prefix</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="phonePrefix">
+              <nz-option *ngFor="let prefix of phonePrefixes" [nzValue]="prefix" [nzLabel]="prefix"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="16">
+        <nz-form-item>
+          <nz-form-label nzRequired>Phone Number</nz-form-label>
+          <nz-form-control [nzErrorTip]="phoneErrorTpl">
+            <input nz-input formControlName="phone" placeholder="Enter phone number">
+            <ng-template #phoneErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please enter phone number
+              </ng-container>
+              <ng-container *ngIf="control.hasError('pattern')">
+                Please enter 10 digit number
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  
+    <div nz-row nzGutter="16">
+      <!-- Age -->
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzRequired>Age</nz-form-label>
+          <nz-form-control [nzErrorTip]="ageErrorTpl">
+            <nz-input-number formControlName="age" [nzMin]="18" [nzMax]="100" [nzStep]="1"
+              style="width: 100%"></nz-input-number>
+            <ng-template #ageErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please enter age
+              </ng-container>
+              <ng-container *ngIf="control.hasError('min') || control.hasError('max')">
+                Age must be between 18-100
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+  
+      <!-- Date of Birth -->
+      <div nz-col nzSpan="10">
+        <nz-form-item>
+          <nz-form-label nzRequired>Date of Birth</nz-form-label>
+          <nz-form-control>
+            <nz-date-picker formControlName="dob" style="width: 100%"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+  
+      <!-- Gender -->
+      <div nz-col nzSpan="8">
+        <nz-form-item>
+          <nz-form-label nzRequired>Gender</nz-form-label>
+          <nz-form-control>
+            <nz-radio-group formControlName="gender">
+              <label nz-radio nzValue="male">Male</label>
+              <label nz-radio nzValue="female">Female</label>
+              <label nz-radio nzValue="other">Other</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  
+    <div nz-row nzGutter="16">
+      <!-- Country -->
+      <div nz-col nzSpan="8">
+        <nz-form-item>
+          <nz-form-label nzRequired>Country</nz-form-label>
+          <nz-form-control [nzErrorTip]="countryErrorTpl">
+            <input nz-input formControlName="country" placeholder="Enter Country">
+            <ng-template #countryErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please enter Country
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+  
+      <!-- State -->
+      <div nz-col nzSpan="8">
+        <nz-form-item>
+          <nz-form-label nzRequired>State</nz-form-label>
+          <nz-form-control [nzErrorTip]="stateErrorTpl">
+            <input nz-input formControlName="state" placeholder="Enter State">
+            <ng-template #stateErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please enter State
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+  
+      <!-- City -->
+      <div nz-col nzSpan="8">
+        <nz-form-item>
+          <nz-form-label nzRequired>City</nz-form-label>
+          <nz-form-control [nzErrorTip]="cityErrorTpl">
+            <input nz-input formControlName="city" placeholder="Enter city">
+            <ng-template #cityErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please enter city
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  
+    <!-- Address -->
+    <div nz-row>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzRequired>Address</nz-form-label>
+          <nz-form-control [nzErrorTip]="addressErrorTpl">
+            <textarea nz-input formControlName="address" rows="3" placeholder="Enter full address"></textarea>
+            <ng-template #addressErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please enter address
+              </ng-container>
+              <ng-container *ngIf="control.hasError('maxlength')">
+                Maximum 200 characters allowed
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  
+    <div nz-row nzGutter="16">
+      <!-- Role -->
+      <div nz-col nzSpan="8">
+        <nz-form-item>
+          <nz-form-label nzRequired>Role</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="role">
+              <nz-option *ngFor="let role of roles" [nzValue]="role" [nzLabel]="role"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+  
+      <!-- Blood Group -->
+      <div nz-col nzSpan="8">
+        <nz-form-item>
+          <nz-form-label nzRequired>Blood Group</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="bloodGroup">
+              <nz-option *ngFor="let group of bloodGroups" [nzValue]="group" [nzLabel]="group"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+  
+      <!-- Last Donation Date -->
+      <div nz-col nzSpan="8">
+        <nz-form-item>
+          <nz-form-label>Last Donation Date</nz-form-label>
+          <nz-form-control>
+            <nz-date-picker formControlName="lastDonationDate" style="width: 100%"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  
+    <div nz-row nzGutter="16">
+      <!-- Coordinates -->
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label>Latitude</nz-form-label>
+          <nz-form-control [nzErrorTip]="latErrorTpl">
+            <nz-input-number formControlName="latitude" [nzMin]="-90" [nzMax]="90" [nzStep]="0.000001"
+              style="width: 100%"></nz-input-number>
+            <ng-template #latErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('min') || control.hasError('max')">
+                Must be between -90 and 90
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label>Longitude</nz-form-label>
+          <nz-form-control [nzErrorTip]="longErrorTpl">
+            <nz-input-number formControlName="longitude" [nzMin]="-180" [nzMax]="180" [nzStep]="0.000001"
+              style="width: 100%"></nz-input-number>
+            <ng-template #longErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('min') || control.hasError('max')">
+                Must be between -180 and 180
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  
+    <!-- Availability -->
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label>Availability</nz-form-label>
+        <nz-form-control>
+          <!-- Wrap nz-switch in nz-switch component (not label) -->
+          <nz-switch formControlName="isAvailable"></nz-switch>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  
+    <!-- Submit Button -->
+    <div nz-row>
+      <div nz-col nzSpan="24" class="text-right">
+        <button nz-button nzType="primary" [disabled]="userForm.invalid">Submit</button>
+      </div>
+    </div>
+  </form>
+</nz-card>
+
+
+<ng-template #extraTemplate>
+  <button nz-button nzType="primary" (click)="goBack()">Back</button>
+</ng-template>

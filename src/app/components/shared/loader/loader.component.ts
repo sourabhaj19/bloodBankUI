@@ -18,7 +18,6 @@ export class LoaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.loader.loadState.subscribe(res => {
-      console.log("LoaderComponent: Loader state changed to", res);
       this.isSpinning = res;
     });
   }

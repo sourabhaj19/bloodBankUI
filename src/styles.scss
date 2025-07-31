@@ -43,3 +43,15 @@ $bg-color7: #dc3545;  // Bootstrap Danger Red
 .bg-color7 {
   background-color: $bg-color7;
 }
+
+
+
+.ant-card-head {
+  background : tomato !important;
+  color: white !important;
+}
+
+nz-layout {
+  background: lavender !important;
+  height: 90vh !important;
+}

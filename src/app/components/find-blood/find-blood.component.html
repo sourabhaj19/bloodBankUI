@@ -1,28 +1,20 @@
 <nz-card nzTitle="Find BLood" [nzBordered]="false">
   <form nz-form [formGroup]="searchBloodForm" (ngSubmit)="submitForm(this.searchBloodForm.value)">
     <div nz-row [nzGutter]="16">
-    
-      <!-- Blood Group -->
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
-        <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your blood group!">
-            <nz-select nzAllowClear nzPlaceHolder="Blood Group" formControlName="bloodGroup">
-              <nz-option nzValue="A+" nzLabel="A+"></nz-option>
-              <nz-option nzValue="B+" nzLabel="B+"></nz-option>
-              <nz-option nzValue="O+" nzLabel="O+"></nz-option>
-              <nz-option nzValue="AB+" nzLabel="AB+"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
 
-      <!-- state -->
+      <!-- Country -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input your country!">
-            <nz-select nzPlaceHolder="country" formControlName="country">
-              <nz-option nzValue="country1" nzLabel="country1"></nz-option>
-              <nz-option nzValue="country2" nzLabel="country2"></nz-option>
+            <nz-select nzPlaceHolder="country" formControlName="country" nzAllowClear
+            nzShowSearch
+            nzServerSearch
+              (ngModelChange)="onCountryChange($event)" (nzOnSearch)="countryFilter($event)">
+              @if(filteredCountries.length > 0) {
+                @for(country of filteredCountries; track country) {
+                  <nz-option [nzValue]="country" [nzLabel]="country?.name || ''"></nz-option>
+                }
+              }
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -32,9 +24,15 @@
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input your state!">
-            <nz-select nzPlaceHolder="state" formControlName="state">
-              <nz-option nzValue="state1" nzLabel="state1"></nz-option>
-              <nz-option nzValue="state2" nzLabel="state2"></nz-option>
+            <nz-select nzPlaceHolder="state" formControlName="state" nzAllowClear
+            nzShowSearch
+            nzServerSearch=""
+              (ngModelChange)="onStateChange($event)" (nzOnSearch)="stateFilter($event)">
+              @if(filteredStates.length > 0) {
+                @for(state of filteredStates; track state) {
+                  <nz-option [nzValue]="state" [nzLabel]="state?.name || ''"></nz-option>
+                }
+              }
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -44,9 +42,34 @@
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input your city!">
-            <nz-select nzPlaceHolder="city" formControlName="city">
-              <nz-option nzValue="city0" nzLabel="city1"></nz-option>
-              <nz-option nzValue="city1" nzLabel="city2"></nz-option>
+            <nz-select nzPlaceHolder="city" formControlName="city" nzAllowClear
+            nzShowSearch
+            nzServerSearch
+              (ngModelChange)="onCityChange($event)" (nzOnSearch)="cityFilter($event)">
+              @if(filteredCities.length > 0) {
+                @for(city of filteredCities; track city) {
+                  <nz-option [nzValue]="city" [nzLabel]="city?.name || ''"></nz-option>
+                }
+              }
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Blood Group -->
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your blood group!">
+            <nz-select nzAllowClear nzPlaceHolder="Blood Group" formControlName="bloodGroup"
+            nzAllowClear
+            nzShowSearch
+            nzServerSearch
+              (ngModelChange)="OnBloodGroupChange($event)" (nzOnSearch)="bloodGroupFilter($event)"> 
+              @if(filteredBlood.length > 0) {
+                @for(bloodGroup of filteredBlood; track bloodGroup) {
+                  <nz-option [nzValue]="bloodGroup" [nzLabel]="bloodGroup || ''">{{bloodGroup || ''}}</nz-option>
+                }
+              }
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -56,7 +79,8 @@
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input your gender!">
-            <nz-select nzAllowClear nzPlaceHolder="Gender" formControlName="gender">
+            <nz-select nzAllowClear nzPlaceHolder="Gender" formControlName="gender"
+              (ngModelChange)="OnGenderChange($event)">
               <nz-option nzValue="male" nzLabel="Male"></nz-option>
               <nz-option nzValue="female" nzLabel="Female"></nz-option>
               <nz-option nzValue="other" nzLabel="Other"></nz-option>
@@ -66,13 +90,13 @@
       </div>
 
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6">
-        <button nz-button nzType="primary" nzSize="small" class="m-1">View All On Map</button>
+        <button nz-button nzType="primary" nzSize="small" class="m-1" (click)="showUserOnMap(listOfSearchedUsers)">View All On Map</button>
       </div>
     </div>
   </form>
 
-    @if(listOfSearchBlood.length >0){
-    <nz-table #basicTable [nzData]="listOfSearchBlood" class="mt-3" [nzBordered]="true" [nzSize]="'middle'">
+  @if(listOfSearchedUsers.length > 0){
+    <nz-table #basicTable [nzData]="listOfSearchedUsers" class="mt-3" [nzBordered]="true" [nzSize]="'middle'">
       <thead>
         <tr>
           <th>Name</th>
@@ -86,11 +110,11 @@
       <tbody>
         @for (data of basicTable.data; track data) {
         <tr>
-          <td>{{ data.fullName }}</td>
-          <td>{{ data.age }}</td>
-          <td>{{ data.phoneprefix }}-{{ data.phone }}</td>
-          <td>{{ data.email }}</td>
-          <td>{{ data.address }}</td>
+          <td>{{ data?.fullName || '' }}</td>
+          <td>{{ data?.age || '' }}</td>
+          <td>{{ data?.phonePrefix || '' }}-{{ data?.phone || '' }}</td>
+          <td>{{ data?.email || '' }}</td>
+          <td>{{ data?.address || '' }}</td>
           <td>
             <button nz-button nzType="primary" nzSize="small" class="m-1" (click)="showUserOnMap(data)">View on Map</button>
           </td>
@@ -98,7 +122,5 @@
         }
       </tbody>
     </nz-table>
-
   }
-  <div id="map"></div>
 </nz-card>

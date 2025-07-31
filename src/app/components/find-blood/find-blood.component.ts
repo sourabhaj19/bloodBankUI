@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -11,7 +11,9 @@ import { NzTableFilterFn, NzTableFilterList, NzTableModule, NzTableSortFn, NzTab
 import { apiService } from '../../services/apiService';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import L from 'leaflet';
+import { NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
+import { MapViewComponent } from '../shared/map-view/map-view.component';
+
 
 
 interface ItemData {
@@ -33,68 +35,205 @@ interface ColumnItem {
 
 @Component({
   selector: 'app-find-blood',
-  imports: [NzInputModule, NzFormModule, NzCardModule, ReactiveFormsModule, RouterModule, NzButtonModule, NzSelectModule, NzDatePickerModule, NzTableModule, NzDividerModule, NzIconModule],
+  imports: [NzInputModule, NzModalModule, NzFormModule, NzCardModule, ReactiveFormsModule, RouterModule, NzButtonModule, NzSelectModule, NzDatePickerModule, NzTableModule, NzDividerModule, NzIconModule],
+  providers: [NzModalService],
   templateUrl: './find-blood.component.html',
   styleUrl: './find-blood.component.scss'
 })
-export class FindBloodComponent implements AfterViewInit{
-  private map!: L.Map;
+export class FindBloodComponent{
+
   apiService = inject(apiService);
-  filterquery  : String = ''
-  listOfSearchBlood : any = [];
-  searchBloodForm! : FormGroup;
-  fb = inject(NonNullableFormBuilder)
+  modal = inject(NzModalService);
+  filterquery: String = '';
+  listOfSearchBlood: any[] = []; // Always an array
+  searchBloodForm!: FormGroup;
+  fb = inject(NonNullableFormBuilder);
+  listOfCountries: any[] = [];
+  filteredCountries: any[] = [];
+  listOfStates: any[] = [];
+  filteredStates: any[] = [];
+  filteredBlood: any[] = [];
+  listOfCities: any[] = [];
+  filteredCities: any[] = [];
+  filtersToGetUsers = {
+    'bloodGroup.equals': null,
+    'city.equals': null,
+    'state.equals': null,
+    'gender.equals': null,
+    'country.equals': null
+  };
+  listOfSearchedUsers: any[] = [];
+
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.initilizeForm();
+    this.getDataForFilter();
+    this.getFilteredUsers();
   }
 
-  initilizeForm(){
+  initilizeForm() {
     this.searchBloodForm = this.fb.group({
-      bloodGroup: [null] ,         // e.g. 'A+', 'O-', etc.
+      bloodGroup: [null],
       city: [null],
       state: [null],
       country: [null],
       gender: [null]
     });
-    
-    this.searchBloodForm.valueChanges.subscribe((data) => {
-      this.submitForm(data)
+  }
+
+  getDataForFilter() {
+    this.apiService.getAvailableCountries().subscribe({
+      next: (data: any) => {
+        this.listOfCountries = data?.body?.content || [];
+        this.filteredCountries = [...this.listOfCountries];
+      },
+      error: () => {
+        this.listOfCountries = [];
+        this.filteredCountries = [];
+      }
     });
   }
 
-  submitForm(filterObject:any){
+  getFilteredUsers() {
+    this.submitForm(this.searchBloodForm.value);
+  }
+
+  onCountryChange(event: any) {
+    if (!event?.id) {
+      this.listOfStates = [];
+      this.filteredStates = [];
+      this.listOfCities = [];
+      this.filteredCities = [];
+      this.searchBloodForm.patchValue({ state: null, city: null });
+      this.submitForm(this.searchBloodForm.value);
+      return;
+    }
+    this.apiService.getAvailableStates({ "countryId.equals": event.id }).subscribe({
+      next: (data: any) => {
+        this.listOfStates = data?.body?.content || [];
+        this.filteredStates = [...this.listOfStates];
+        this.listOfCities = [];
+        this.filteredCities = [];
+        this.searchBloodForm.patchValue({ state: null, city: null });
+        this.submitForm(this.searchBloodForm.value);
+      },
+      error: () => {
+        this.listOfStates = [];
+        this.filteredStates = [];
+        this.listOfCities = [];
+        this.filteredCities = [];
+      }
+    });
+  }
+
+  onStateChange(event: any) {
+    if (!event?.id) {
+      this.listOfCities = [];
+      this.filteredCities = [];
+      this.searchBloodForm.patchValue({ city: null });
+      this.submitForm(this.searchBloodForm.value);
+      return;
+    }
+    this.apiService.getAvailableCities({ "stateId.equals": event.id }).subscribe({
+      next: (data: any) => {
+        this.listOfCities = data?.body?.content || [];
+        this.filteredCities = [...this.listOfCities];
+        this.searchBloodForm.patchValue({ city: null });
+        this.submitForm(this.searchBloodForm.value);
+      },
+      error: () => {
+        this.listOfCities = [];
+        this.filteredCities = [];
+      }
+    });
+  }
+
+  onCityChange(event: any) {
+    this.submitForm(this.searchBloodForm.value);
+    this.apiService.getAvailableBlood().subscribe({
+      next: (data: any) => {
+        this.listOfSearchBlood = data?.body || [];
+      },
+      error: () => {
+        this.listOfSearchBlood = [];
+      }
+    });
+  }
+
+  OnGenderChange(event: any) {
+    this.submitForm(this.searchBloodForm.value);
+  }
+
+  countryFilter(search: string) {
+    if (!search) {
+      this.filteredCountries = [...this.listOfCountries];
+      return;
+    }
+    this.filteredCountries = this.listOfCountries.filter((country: any) =>
+      (country?.name || '').toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  stateFilter(search: string) {
+    if (!search) {
+      this.filteredStates = [...this.listOfStates];
+      return;
+    }
+    this.filteredStates = this.listOfStates.filter((state: any) =>
+      (state?.name || '').toLowerCase().includes(search.toLowerCase())
+    );
+  }
+  bloodGroupFilter(search: string) {
+    if (!search) {
+      this.filteredBlood = [...this.listOfSearchBlood];
+      return;
+    }
+    this.filteredBlood = this.listOfSearchBlood.filter((state: any) =>
+      (state?.name || '').toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  cityFilter(search: string) {
+    if (!search) {
+      this.filteredCities = [...this.listOfCities];
+      return;
+    }
+    this.filteredCities = this.listOfCities.filter((city: any) =>
+      (city?.name || '').toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  OnBloodGroupChange(event: any) {
+    this.submitForm(this.searchBloodForm.value);
+  }
+
+  submitForm(filterObject: any) {
     const constructedFilterObject = {
-      'bloodGroup.equals': filterObject.bloodGroup || null,
-      'city.equals': filterObject.city || null,
-      'state.equals': filterObject.state || null,
-      'gender.equals': filterObject.gender || null,
-      'country.equals': filterObject.country || null,
+      'bloodGroup.equals': filterObject?.bloodGroup || null,
+      'city.equals': filterObject?.city?.name || null,
+      'state.equals': filterObject?.state?.name || null,
+      'gender.equals': filterObject?.gender || null,
+      'country.equals': filterObject?.country?.name || null,
     };
-    this.apiService.getUsers(constructedFilterObject).subscribe((data:any) => {
-      console.log(data);
-      this.listOfSearchBlood = data.body.content;
+    this.apiService.getUsers(constructedFilterObject).subscribe({
+      next: (data: any) => {
+        this.listOfSearchedUsers = data?.body?.content || [];
+      },
+      error: () => {
+        this.listOfSearchedUsers = [];
+      }
     });
   }
 
-  ngAfterViewInit(): void {
-    console.log('FindBloodComponent: AfterViewInit called');
-    this.initMap();
+
+  showUserOnMap(user: any | any[]) {
+    this.modal.create({
+      nzTitle: user?.fullName ? `Location of ${user.fullName}` : 'Search Locations',
+      nzContent: MapViewComponent, // Your Leaflet component
+      nzData:  {user} , // Pass user data
+      nzWidth: 700,
+      nzBodyStyle: { padding: '0' }, // Remove padding for full-width map
+    });
   }
 
-  private initMap(): void {
-    this.map = L.map('map').setView([16.451078, 74.398695], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19
-    }).addTo(this.map);
-  }
-
-  showUserOnMap(user: any) {
-    console.log('Show user on map:', user);
-    this.map.setView([user.latitude, user.longitude], 13);
-    const marker = L.marker([user.latitude, user.longitude]).addTo(this.map)
-    marker.bindPopup(`Name: ${user.fullName}<br>Gender: ${user.gender}<br>Phone: ${user.phoneprefix}-${user.phone}`).openPopup();
-  }
-
+  
 }

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -10,6 +10,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { apiService } from '../../services/apiService';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-registration',
@@ -24,9 +25,8 @@ export class RegistrationComponent implements OnInit{
   private fb = inject(NonNullableFormBuilder)
   private apiService = inject(apiService)
   private http = inject(HttpClient)
-
-
-
+  isEditable:boolean = false;
+  constructor(){}
   ngOnInit(): void {
    this.initilizeForm();
   }
@@ -41,12 +41,13 @@ export class RegistrationComponent implements OnInit{
     bloodGroup: [null, [Validators.required]] ,         // e.g. 'A+', 'O-', etc.
     age: [null, [Validators.required]],
     gender: [null, [Validators.required]],
-    phoneprefix: ['+91'],
+    phonePrefix: ['+91'],
     isAvailable: [true, [Validators.required]],  // switch toggle
     dob: [null, [Validators.required]],    // optional
-    country: [null, [Validators.required]],
-    city: [null, [Validators.required]],
-    state: [null, [Validators.required]],
+    country: [{ value: null, disabled: true }, [Validators.required]],
+    countryCode: [null, [Validators.required]],
+    city: [{ value: null, disabled: true }, [Validators.required]],
+    state: [{ value: null, disabled: true }, [Validators.required]],
     address: [null],
     role: ['ROLE_USER'],
     latitude: [null,[Validators.required]],
@@ -58,8 +59,9 @@ export class RegistrationComponent implements OnInit{
   submitForm() {
     console.log('Form submitted:', this.registrationForm);
     if(this.registrationForm?.valid) {
-      this.apiService.register(this.registrationForm.value).subscribe((res) => {
+      this.apiService.register(this.registrationForm.getRawValue()).subscribe((res) => {
         console.log(res);
+        window.history.back();
       });
     }
   }
@@ -121,7 +123,8 @@ export class RegistrationComponent implements OnInit{
                 address: address.display_name,
                 city: address.address.city || address.address.town || address.address.village,
                 state: address.address.state,
-                country: address.address.country
+                country: address.address.country,
+                countryCode: address.address.country_code
               });
             },
             error: (err) => {

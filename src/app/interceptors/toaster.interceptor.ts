@@ -21,7 +21,6 @@ export class ToasterInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.loaderService.showLoader(); // Show loader when request starts
-    console.log('intercepting request:', req.method, req.url);
     return next.handle(req).pipe(
       tap((event) => {
         if (event instanceof HttpResponse && event.status >= 200 && event.status < 300) {
@@ -33,7 +32,6 @@ export class ToasterInterceptor implements HttpInterceptor {
         return throwError(() => error);
       }),
       finalize(() => {
-        console.log("Request completed");
         this.loaderService.hideLoader(); // Hide loader when request completes (success or error)
       })
     );
@@ -52,7 +50,6 @@ export class ToasterInterceptor implements HttpInterceptor {
   }
 
   private handleErrorNotification(error: HttpErrorResponse): void {
-    console.error('Request error:', error);
     const message = error?.error?.message || error?.error?.error || 'An unexpected error occurred';
     this.notification.error('Request Failed', message);
   }

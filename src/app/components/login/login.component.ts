@@ -52,7 +52,7 @@ export class LoginComponent {
           console.log(res);
           sessionStorage.setItem('user', JSON.stringify(res));
           this.authService.setUser(res); // Pass the actual response object
-          this.router.navigate(['/dashboard']);  
+          this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           console.error(err);

@@ -1,4 +1,4 @@
-<nz-card nzTitle="Registration" [nzBordered]="false">
+<nz-card [nzTitle]="isEditable ? '':'Registration'" [nzBordered]="false">
   <form nz-form [formGroup]="registrationForm" (ngSubmit)="submitForm()">
     <div nz-row [nzGutter]="16">
       <!-- Full Name -->
@@ -41,16 +41,18 @@
       </div>
 
       <!-- Password -->
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
-        <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your password!">
-            <nz-input-group nzPrefixIcon="lock">
-              <input type="password" autocomplete="current-password" nz-input formControlName="password"
-                placeholder="Password" />
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
+       @if(!isEditable){
+         <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+           <nz-form-item>
+             <nz-form-control nzErrorTip="Please input your password!">
+               <nz-input-group nzPrefixIcon="lock">
+                 <input type="password" autocomplete="current-password" nz-input formControlName="password"
+                   placeholder="Password" />
+               </nz-input-group>
+             </nz-form-control>
+           </nz-form-item>
+         </div>
+       }
 
       <!-- Blood Group -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
@@ -106,45 +108,43 @@
       </div>
 
       <!-- country -->
-      <!-- <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your country!">
-            <nz-select nzPlaceHolder="country" formControlName="country">
-              <nz-option [nzValue]="false" nzLabel="country1"></nz-option>
-              <nz-option [nzValue]="true" nzLabel="country2"></nz-option>
-            </nz-select>
+          <nz-form-control>
+            <nz-input-group >
+              <input type="text" nz-input formControlName="country" placeholder="country"/>
+            </nz-input-group>
           </nz-form-control>
         </nz-form-item>
-      </div> -->
+      </div>
 
-      
-      
-      
 
       <!-- city -->
-      <!-- <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your city!">
-            <nz-select nzPlaceHolder="city" formControlName="city">
-              <nz-option nzValue="city0" nzLabel="city1"></nz-option>
-              <nz-option nzValue="city1" nzLabel="city2"></nz-option>
-            </nz-select>
+          <nz-form-control>
+            <nz-input-group >
+              <input type="text" nz-input formControlName="city" placeholder="city"/>
+            </nz-input-group>
           </nz-form-control>
         </nz-form-item>
-      </div> -->
+      </div>
+
 
       <!-- state -->
-      <!-- <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your state!">
-            <nz-select nzPlaceHolder="state" formControlName="state">
-              <nz-option nzValue="state1" nzLabel="state1"></nz-option>
-              <nz-option nzValue="state2" nzLabel="state2"></nz-option>
-            </nz-select>
+          <nz-form-control>
+            <nz-input-group>
+              <input type="text" nz-input formControlName="state" placeholder="state"/>
+            </nz-input-group>
           </nz-form-control>
         </nz-form-item>
-      </div> -->
+      </div>
 
+  
       <!-- address -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
@@ -159,8 +159,11 @@
     </div>
 
     <!-- Submit Button -->
-    <div style="text-align: right; margin-top: 20px;">
-      <button nz-button [nzType]="'primary'">Register</button>
-    </div>
+     @if(!isEditable){
+      <div style="text-align: right; margin-top: 20px;">
+        <button nz-button [nzType]="'primary'">Register</button>
+        </div>
+     }
+   
   </form>
 </nz-card>

@@ -20,7 +20,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 })
 export class HeaderComponent implements OnInit {
   route = inject(Router);
-  isCollapsed = true;
+  isCollapsed = false;
   filteredMenuItems: any[] = [];
   isLoggedIn = false;
   username = '';

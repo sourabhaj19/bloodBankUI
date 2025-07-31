@@ -12,8 +12,9 @@ export const MENU_ITEMS = [
   {
     title: 'Masters', icon: 'gift', role: ['ROLE_ADMIN'],
     childrens: [
-      { title: 'Users', link: '/users', icon: 'user', role: ['ROLE_ADMIN'] },
-      { title: 'Roles', link: '/center', icon: 'bank', role: ['ROLE_ADMIN'] }
+      { title: 'Countries', link: '/countries', icon: 'user', role: ['ROLE_ADMIN'] },
+      { title: 'States', link: '/states', icon: 'bank', role: ['ROLE_ADMIN'] },
+      { title: 'Cities', link: '/cities', icon: 'bank', role: ['ROLE_ADMIN'] }
     ]
   },
 ];

@@ -58,17 +58,17 @@ export class DashboardComponent implements OnInit{
   getCurrentUser() {
     const userString = sessionStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
-    if (!user) {
-      return;
+    console.log('User from sessionStorage:', user.user);
+    if (user.user) {
+      this.apiService.getUserById(user?.user?.id).subscribe({
+        next: (res) => {
+          console.log('User details from API:', res);
+          this.currentUser = res?.body;
+        },
+        error: (err) => {
+          console.error('Failed to fetch user details:', err);
+        }
+      });
     }
-    this.apiService.getLoggedUser(user?.user?.id).subscribe({
-      next: (res) => {
-        console.log('User details from API:', res);
-        this.currentUser = res;
-      },
-      error: (err) => {
-        console.error('Failed to fetch user details:', err);
-      }
-    });
   }
 }

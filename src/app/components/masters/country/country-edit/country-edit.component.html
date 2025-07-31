@@ -1,0 +1,35 @@
+
+          <form [formGroup]="countryForm" (ngSubmit)="onSubmit()" novalidate>
+            <div class="form-group mb-3">
+              <label for="code" class="form-label">Country Code</label>
+              <input type="text" class="form-control" id="code" formControlName="code" [ngClass]="{ 'is-invalid': countryForm.get('code')?.invalid && 
+                     (countryForm.get('code')?.dirty || countryForm.get('code')?.touched) }">
+              <div class="invalid-feedback" *ngIf="countryForm.get('code')?.errors?.required">
+                Country code is required
+              </div>
+              <div class="invalid-feedback" *ngIf="countryForm.get('code')?.errors?.maxlength">
+                Country code must be less than 10 characters
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="name" class="form-label">Country Name</label>
+              <input type="text" class="form-control" id="name" formControlName="name" [ngClass]="{ 'is-invalid': countryForm.get('name')?.invalid && 
+                     (countryForm.get('name')?.dirty || countryForm.get('name')?.touched) }">
+              <div class="invalid-feedback" *ngIf="countryForm.get('name')?.errors?.required">
+                Country name is required
+              </div>
+              <div class="invalid-feedback" *ngIf="countryForm.get('name')?.errors?.maxlength">
+                Country name must be less than 255 characters
+              </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <button type="button" class="btn btn-secondary me-md-2" (click)="router.navigate(['/countries'])">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="countryForm.invalid">
+                {{ isEditMode ? 'Update' : 'Save' }}
+              </button>
+            </div>
+          </form>
