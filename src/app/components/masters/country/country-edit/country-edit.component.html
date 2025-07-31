@@ -1,5 +1,5 @@
 
-          <form [formGroup]="countryForm" (ngSubmit)="onSubmit()" novalidate>
+          <form [formGroup]="countryForm" novalidate>
             <div class="form-group mb-3">
               <label for="code" class="form-label">Country Code</label>
               <input type="text" class="form-control" id="code" formControlName="code" [ngClass]="{ 'is-invalid': countryForm.get('code')?.invalid && 
@@ -24,12 +24,12 @@
               </div>
             </div>
 
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end">
               <button type="button" class="btn btn-secondary me-md-2" (click)="router.navigate(['/countries'])">
                 Cancel
               </button>
               <button type="submit" class="btn btn-primary" [disabled]="countryForm.invalid">
                 {{ isEditMode ? 'Update' : 'Save' }}
               </button>
-            </div>
+            </div> -->
           </form>

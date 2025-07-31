@@ -57,15 +57,47 @@ export class CountryListComponent {
   }
 
   editCountry(country: Country | null = null): void {
-    this.modal.create({
-      nzOkText: 'Yes',
-      nzOkType: 'primary',
-      nzOkDanger: true,
-      nzTitle: 'Add Country',
-      nzData: { country },
-      nzContent: CountryEditComponent, // Assuming you have a component for editing countries
+    const modalRef = this.modal.create({
+      nzTitle: country ? 'Edit Country' : 'Add Country',
+      nzContent: CountryEditComponent,
+      nzData: {
+        country: country || {} // Pass existing country or empty object for new
+      },
+      nzFooter: [
+        {
+          label: 'Cancel',
+          onClick: () => modalRef.destroy()
+        },
+        {
+          label: 'Save',
+          type: 'primary',
+          onClick: () => {
+            const editedCountry = modalRef.getContentComponent().getEditedCountry();
+
+            // Call appropriate API method
+            const apiCall = country
+              ? this.apiService.editCountry(editedCountry)
+              : this.apiService.createCountry(editedCountry);
+
+            apiCall.subscribe({
+              next: (res) => {
+                this.getCountries(); // Refresh list
+                modalRef.destroy();
+              },
+              error: (err) => {
+                console.error(err);
+              }
+            });
+
+            // Prevent modal from closing automatically
+            return false;
+          }
+        }
+      ]
     });
   }
+
+  
 
 
 }

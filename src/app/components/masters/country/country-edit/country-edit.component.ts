@@ -8,6 +8,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { Country } from '../country.model';
 
 @Component({
   selector: 'app-country-edit',
@@ -39,7 +40,8 @@ export class CountryEditComponent {
       code: ['', [Validators.required, Validators.maxLength(10)]]
     });
   }
-  onSubmit(){
-
+  
+  getEditedCountry(): Country {
+    return this.countryForm.value;
   }
 }

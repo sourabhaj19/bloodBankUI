@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { CITY, COUNTRY, GET_ALL_USERS, GET_AVAiLABLE_BLOOD, LOGIN, REGISTER, SEARCH_BLOOD_QUERY, STATE} from '../utils/apiUrls'
 import { inject, Injectable } from '@angular/core';
 import { createRequestOption } from '../utils/request.util';
+import { Country } from '../components/masters/country/country.model';
 
 @Injectable({
   providedIn: 'root' // This ensures the service is globally available
@@ -55,8 +56,15 @@ export class apiService{
     return this.http.delete(GET_ALL_USERS + '/' + id, { observe: 'response' });
   }
 
+  createCountry(payload: Country) {
+    return this.http.post(COUNTRY, payload, { observe: 'response' });
+  }
+
   deleteCountry(id: number) {
     return this.http.delete(COUNTRY + '/' + id, { observe: 'response' });
+  }
+  editCountry(payload : Country) {
+    return this.http.put(COUNTRY , payload, { observe: 'response' });
   }
 
   editUser(User:any) {
