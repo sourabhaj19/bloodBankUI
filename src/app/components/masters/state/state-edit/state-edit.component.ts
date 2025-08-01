@@ -1,0 +1,90 @@
+import { CommonModule } from '@angular/common';
+import { Component, signal } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { apiService } from '../../../../services/apiService';
+import { Country } from '../../country/country.model';
+
+@Component({
+  selector: 'app-state-edit',
+  imports: [CommonModule,FormsModule,
+        ReactiveFormsModule, // Required for formGroup
+        NzFormModule,
+        NzInputModule,
+        NzSelectModule,
+        NzDatePickerModule,
+        NzRadioModule,
+        NzInputNumberModule,
+        NzSwitchModule,
+        NzButtonModule,
+        NzCardModule,
+        NzIconModule],
+  templateUrl: './state-edit.component.html',
+  styleUrl: './state-edit.component.scss'
+})
+export class StateEditComponent {
+  stateForm!: FormGroup;
+  countryMaster: Country[] = [];
+  error = signal<string | null>(null);
+  constructor(private fb : FormBuilder, private apiService : apiService, private route : Router){}
+
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.initializeForm();
+    this.loadInitialStateData();
+  }
+
+  initializeForm() {
+    this.stateForm = this.fb.group({
+      id: [null],
+      name: ['', [Validators.required]],
+      country: [null, [Validators.required]]
+    });
+  }
+
+
+  private loadInitialStateData(): void {
+    this.apiService.getCountries().subscribe({
+      next: (countries : any) => {
+        this.countryMaster = countries?.body?.content;
+        console.log(this.countryMaster);
+        this.error.set(null);
+      },
+      error: (err) => {
+        this.error.set(err.message || 'Failed to load states');
+      }
+    });
+  }
+
+
+
+
+  saveCity(){
+    console.log(this.stateForm.value);
+    this.apiService.createState(this.stateForm.value).subscribe({
+      next: (response:any) => {
+        console.log('State saved successfully', response);
+        this.route.navigate(['/states']);
+      },
+      error: (error) => {
+        console.error('Error saving state', error);
+        this.error.set(error.message || 'Failed to save state');
+      }
+    })
+  }
+
+  goBack() {
+    window.history.back();
+  }
+}

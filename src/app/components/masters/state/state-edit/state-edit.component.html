@@ -1,0 +1,55 @@
+<nz-card [nzBordered]="false" [nzTitle]="stateForm.get('id')?.value ? 'Edit User' : 'Add User'"
+  [nzExtra]="extraTemplate">
+
+  <form nz-form [formGroup]="stateForm" class="user-form" (ngSubmit)="saveCity()">
+    <div nz-row nzGutter="16">
+      <!-- Full Name -->
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label nzRequired>State Name</nz-form-label>
+          <nz-form-control [nzErrorTip]="fullNameErrorTpl">
+            <input nz-input formControlName="name" placeholder="Enter State name">
+            <ng-template #fullNameErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please enter State name
+              </ng-container>
+              <ng-container *ngIf="control.hasError('maxlength')">
+                Maximum 50 characters allowed
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+    </div>
+
+
+
+
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>Country</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="country">
+            @for(country of countryMaster; track country) {
+              <nz-option [nzValue]="country" [nzLabel]="country.name"></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+
+    <!-- Submit Button -->
+    <div nz-row>
+      <div nz-col nzSpan="24" class="text-right">
+        <button nz-button nzType="primary" [disabled]="stateForm.invalid">Submit</button>
+      </div>
+    </div>
+  </form>
+</nz-card>
+
+
+<ng-template #extraTemplate>
+  <button nz-button nzType="primary" (click)="goBack()">Back</button>
+</ng-template>

@@ -1,4 +1,4 @@
-<nz-card [nzBordered]="false" nzTitle="State Master">
+<nz-card [nzBordered]="false" nzTitle="State Master" [nzExtra]="extraTemplate">
 @if(listOfStates.length >0){
 <nz-table #basicTable [nzData]="listOfStates">
   <thead>
@@ -17,11 +17,8 @@
       <td>{{ data.country?.name }}</td>
       <td>{{ data.country?.code }}</td>
       <td>
-        <!-- View Button (Primary Blue) -->
-        <button class="m-1" nz-button nzType="primary" nzSize="small">View</button>
-
         <!-- Edit Button (Default with Border) -->
-        <button class="m-1" nz-button nzType="default" nzSize="small">Edit</button>
+        <button class="m-1" nz-button nzType="default" nzSize="small" (click)="editState(data.id)">Edit</button>
 
         <!-- Delete Button (Danger Red) -->
         <button class="m-1" nz-button nzType="primary" nzDanger nzSize="small">Delete</button>
@@ -32,3 +29,7 @@
 </nz-table>
 }
 </nz-card>
+
+<ng-template #extraTemplate>
+  <button nz-button nzType="default" (click)="editState()">Add State</button>
+</ng-template>

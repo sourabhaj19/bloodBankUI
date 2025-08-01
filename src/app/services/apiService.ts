@@ -3,6 +3,8 @@ import { CITY, COUNTRY, GET_ALL_USERS, GET_AVAiLABLE_BLOOD, LOGIN, REGISTER, SEA
 import { inject, Injectable } from '@angular/core';
 import { createRequestOption } from '../utils/request.util';
 import { Country } from '../components/masters/country/country.model';
+import { Observable } from 'rxjs';
+import { State } from '../components/masters/state/state.model';
 
 @Injectable({
   providedIn: 'root' // This ensures the service is globally available
@@ -76,13 +78,21 @@ export class apiService{
     return this.http.get(COUNTRY, { params: options, observe: 'response' });
   }
 
-  getStates(queryParams?: any) {
+  getStates(queryParams?: any): Observable<State[]> {
     const options = createRequestOption(queryParams);
-    return this.http.get(STATE, { params: options, observe: 'response' });
+    return this.http.get<State[]>(STATE, { params: options }); // Remove observe: 'response'
+  }
+
+  createState(payload: State) {
+    return this.http.post(STATE, payload, { observe: 'response' });
   }
 
   getCities(queryParams?: any) {
     const options = createRequestOption(queryParams);
     return this.http.get(CITY, { params: options, observe: 'response' });
+  }
+
+  createCity(payload: any) {
+    return this.http.post(CITY, payload, { observe: 'response' });
   }
 }

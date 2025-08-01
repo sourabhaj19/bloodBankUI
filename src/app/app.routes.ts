@@ -11,6 +11,8 @@ import { StateListComponent } from './components/masters/state/state-list/state-
 import { CityListComponent } from './components/masters/city/city-list/city-list.component';
 import { UserEditComponent } from './components/user-management/user-edit/user-edit.component';
 import { UserResolver } from './components/user-management/user.resolver';
+import { CityEditComponent } from './components/masters/city/city-edit/city-edit.component';
+import { StateEditComponent } from './components/masters/state/state-edit/state-edit.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, canActivate:[AuthGuard] },
@@ -35,5 +37,8 @@ export const routes: Routes = [
   { path: 'find-blood', component: FindBloodComponent },
   { path: 'countries', component: CountryListComponent },
   { path: 'states', component: StateListComponent },
+  { path: 'state/:id', component: StateEditComponent },
+  { path: 'state/new', component: StateEditComponent },
   { path: 'cities', component: CityListComponent },
+  { path: 'cities/:id', component: CityEditComponent },
 ];
