@@ -1,0 +1,29 @@
+<form nz-form [formGroup]="cityForm" class="user-form">
+  <div class="form-group mb-3">
+      <nz-form-item>
+        <nz-form-label nzRequired>City Name</nz-form-label>
+        <nz-form-control [nzErrorTip]="fullNameErrorTpl">
+          <input nz-input formControlName="name" placeholder="Enter City name">
+          <ng-template #fullNameErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">
+              Please enter full name
+            </ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">
+              Maximum 50 characters allowed
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+  <div class="form-group mb-3">
+    <nz-form-item>
+      <nz-form-label nzRequired>State</nz-form-label>
+      <nz-form-control>
+        <nz-select formControlName="state" >
+          <nz-option *ngFor="let state of statesMaster" [nzValue]="state" [nzLabel]="state.name"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+</form>
