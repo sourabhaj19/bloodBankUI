@@ -5,6 +5,8 @@ import { createRequestOption } from '../utils/request.util';
 import { Country } from '../components/masters/country/country.model';
 import { Observable } from 'rxjs';
 import { State } from '../components/masters/state/state.model';
+import { User } from '../components/user-management/user.model';
+import { City } from '../components/masters/city/city.model';
 
 @Injectable({
   providedIn: 'root' // This ensures the service is globally available
@@ -17,12 +19,12 @@ export class apiService{
   login(payload :any){
     return this.http.post(LOGIN, payload)
   }
-  register(payload :any){
+  register(payload: User){
     return this.http.post(REGISTER, payload)
   }
 
 
-  getUserById(id: any) {
+  getUserById(id: number) {
     return this.http.get(GET_ALL_USERS + '/' + id, { observe: 'response' });
   }
   searchBlood(query : any){
@@ -69,7 +71,7 @@ export class apiService{
     return this.http.put(COUNTRY , payload, { observe: 'response' });
   }
 
-  editUser(User:any) {
+  editUser(User:User) {
     return this.http.put(GET_ALL_USERS, User ,{ observe: 'response' });
   }
 
@@ -87,12 +89,20 @@ export class apiService{
     return this.http.post(STATE, payload, { observe: 'response' });
   }
 
+  deleteState(id: number) {
+    return this.http.delete(STATE + '/' + id, { observe: 'response' });
+  }
+
   getCities(queryParams?: any) {
     const options = createRequestOption(queryParams);
     return this.http.get(CITY, { params: options, observe: 'response' });
   }
 
-  createCity(payload: any) {
+  createCity(payload: City) {
     return this.http.post(CITY, payload, { observe: 'response' });
+  }
+
+  deleteCity(id: number) {
+    return this.http.delete(CITY + '/' + id, { observe: 'response' });
   }
 }

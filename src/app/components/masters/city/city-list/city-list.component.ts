@@ -17,8 +17,8 @@ import { NzModalService } from 'ng-zorro-antd/modal';
   styleUrl: './city-list.component.scss'
 })
 export class CityListComponent {
-apiService = inject(apiService);
-route = inject(Router);
+  apiService = inject(apiService);
+  route = inject(Router);
   modal = inject(NzModalService);
   listOfCities: any[] = [];
 
@@ -37,41 +37,69 @@ route = inject(Router);
 
 
   editCity(city: City | null = null): void {
-        const modalRef = this.modal.create({
-          nzTitle: city ? 'Edit City' : 'Add City',
-          nzContent: CityEditComponent,
-          nzData: {
-            city: city || {} // Pass existing country or empty object for new
-          },
-          nzFooter: [
-            {
-              label: 'Cancel',
-              onClick: () => modalRef.destroy()
-            },
-            {
-              label: 'Save',
-              type: 'primary',
-              onClick: () => {
-                const editedCity = modalRef.getContentComponent().getEditedCity();
-    
-                // Call appropriate API method
-                const apiCall = this.apiService.createCity(editedCity);
-    
-                apiCall.subscribe({
-                  next: (res) => {
-                    this.getcities(); // Refresh list
-                    modalRef.destroy();
-                  },
-                  error: (err) => {
-                    console.error(err);
-                  }
-                });
-    
-                // Prevent modal from closing automatically
-                return false;
+    const modalRef = this.modal.create({
+      nzTitle: city ? 'Edit City' : 'Add City',
+      nzContent: CityEditComponent,
+      nzData: {
+        city: city || {} // Pass existing country or empty object for new
+      },
+      nzFooter: [
+        {
+          label: 'Cancel',
+          onClick: () => modalRef.destroy()
+        },
+        {
+          label: 'Save',
+          type: 'primary',
+          onClick: () => {
+            const editedCity = modalRef.getContentComponent().getEditedCity();
+
+            // Call appropriate API method
+            const apiCall = this.apiService.createCity(editedCity);
+
+            apiCall.subscribe({
+              next: (res) => {
+                this.getcities(); // Refresh list
+                modalRef.destroy();
+              },
+              error: (err) => {
+                console.error(err);
               }
+            });
+
+            // Prevent modal from closing automatically
+            return false;
+          }
+        }
+      ]
+    });
+  }
+
+
+  delete(data: City) {
+    this.modal.confirm({
+      nzTitle: 'This action can not be revert!',
+      nzContent: `<b style="color: red;">Are you want to sure to delete City ${data.name}</b>`,
+      nzOkText: 'Yes',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+
+      nzOnOk: () => {
+        if(data?.id){
+          this.apiService.deleteCity(data?.id).subscribe({
+    
+            next: (res) => {
+              console.log('City deleted successfully:', res);
+              this.getcities(); // Refresh the list after deletion
+            },          
+            error: (err) => {
+              console.error('Error deleting City:', err);
             }
-          ]
-        });
-      }
+          });
+        }
+      },
+      nzCancelText: 'No',
+      nzOnCancel: () => console.log('Cancel')
+    });
+  }
 }

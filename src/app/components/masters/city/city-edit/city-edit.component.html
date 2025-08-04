@@ -20,7 +20,7 @@
     <nz-form-item>
       <nz-form-label nzRequired>State</nz-form-label>
       <nz-form-control>
-        <nz-select formControlName="state" >
+        <nz-select formControlName="state" [compareWith]="compareStates">
           <nz-option *ngFor="let state of statesMaster" [nzValue]="state" [nzLabel]="state.name"></nz-option>
         </nz-select>
       </nz-form-control>

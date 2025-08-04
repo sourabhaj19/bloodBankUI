@@ -1,0 +1,23 @@
+export interface User {
+  id: number,
+  fullName: string,
+  email: string,
+  phone: string,
+  phonePrefix: string,
+  age: number,
+  dob: string,
+  gender: string,
+  state: string,
+  country: string,
+  countryCode: string,
+  city: string,
+  address: string,
+  role: string,
+  bloodGroup: string,
+  latitude: number,
+  longitude: number,
+  lastDonationDate: string,
+  isAvailable: boolean,
+  isActive: boolean,
+
+}

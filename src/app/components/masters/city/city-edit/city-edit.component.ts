@@ -73,5 +73,6 @@ export class CityEditComponent implements OnInit {
   getEditedCity(): City {
       return this.cityForm.value;
     }
+
 }
 

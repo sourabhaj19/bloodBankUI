@@ -11,10 +11,12 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { FormsModule } from '@angular/forms';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { Router, RouterModule } from '@angular/router';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { User } from '../user.model';
 
 @Component({
   selector: 'app-users-list',
-  imports: [NzTableModule, NzButtonModule, NzModalModule, CommonModule, NzModalModule, NzCardModule, NzDropDownModule, FormsModule, NzIconModule, RouterModule],
+  imports: [NzTableModule, NzButtonModule, NzModalModule, CommonModule, NzModalModule, NzCardModule, NzDropDownModule, FormsModule, NzIconModule, RouterModule,NzSwitchModule],
   providers: [NzModalService],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss'
@@ -23,8 +25,8 @@ export class UsersListComponent implements OnInit {
   private map!: L.Map;
    modal = inject(NzModalService);
   constructor(private apiService: apiService, private router : Router) {}
-  listOfUsers: any[] = [];
-  listOfDisplayData: any[] = [];
+  listOfUsers: User[] = [];
+  listOfDisplayData: User[] = [];
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -42,7 +44,7 @@ export class UsersListComponent implements OnInit {
   modalData : any;
   isConfirmLoading = false;
 
-  viewUser(data:any): void {
+  viewUser(data: User): void {
     this.modalData = data;
   }
 
@@ -66,7 +68,7 @@ export class UsersListComponent implements OnInit {
     this.modalData = null;
   }
 
-  showUserOnMap(user: any | any[]) {
+  showUserOnMap(user: User) {
       this.modal.create({
         nzTitle: user?.fullName ? `Location of ${user.fullName}` : 'Search Locations',
         nzContent: MapViewComponent, // Your Leaflet component
@@ -76,7 +78,7 @@ export class UsersListComponent implements OnInit {
       });
     }
 
-  delete(data: any) {
+  delete(data: User) {
     this.modal.confirm({
       nzTitle: 'This action can not be revert!',
       nzContent: `<b style="color: red;">Are you want to sure to delete ${data.fullName}</b>`,
@@ -101,6 +103,16 @@ export class UsersListComponent implements OnInit {
   searchValue = '';
   visible = false;
 
+
+  changeActiveStatus(user : User){
+    user.isActive = !user.isActive;
+    this.apiService.editUser(user).subscribe({
+      next: (res:any) => {
+        console.log('User status updated successfully:', res);
+        this.getUsers(); // Refresh the list after status change
+      }
+    });
+  }
   reset(): void {
     this.searchValue = '';
     this.search();

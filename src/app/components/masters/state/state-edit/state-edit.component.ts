@@ -14,6 +14,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { apiService } from '../../../../services/apiService';
 import { Country } from '../../country/country.model';
+import { State } from '../state.model';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-state-edit',
@@ -36,7 +38,7 @@ export class StateEditComponent {
   stateForm!: FormGroup;
   countryMaster: Country[] = [];
   error = signal<string | null>(null);
-  constructor(private fb : FormBuilder, private apiService : apiService, private route : Router){}
+  constructor(private fb : FormBuilder, private apiService : apiService,private modalRef: NzModalRef){}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -58,7 +60,10 @@ export class StateEditComponent {
     this.apiService.getCountries().subscribe({
       next: (countries : any) => {
         this.countryMaster = countries?.body?.content;
-        console.log(this.countryMaster);
+        if (this.modalRef.getConfig().nzData?.state) {
+          this.stateForm.patchValue(this.modalRef.getConfig().nzData.state)
+          console.log(this.modalRef.getConfig().nzData.state);
+        }
         this.error.set(null);
       },
       error: (err) => {
@@ -67,24 +72,12 @@ export class StateEditComponent {
     });
   }
 
-
-
-
-  saveCity(){
-    console.log(this.stateForm.value);
-    this.apiService.createState(this.stateForm.value).subscribe({
-      next: (response:any) => {
-        console.log('State saved successfully', response);
-        this.route.navigate(['/states']);
-      },
-      error: (error) => {
-        console.error('Error saving state', error);
-        this.error.set(error.message || 'Failed to save state');
+ getEditedState(): State {
+        return this.stateForm.value;
       }
-    })
-  }
 
-  goBack() {
-    window.history.back();
+  compareCountries = (country1: Country, country2: Country) => {
+    return country1 && country2 && country1.id === country2.id;
   }
+  
 }

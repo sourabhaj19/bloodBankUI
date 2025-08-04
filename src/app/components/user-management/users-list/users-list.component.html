@@ -12,6 +12,7 @@
           <th>phone</th>
           <th>email</th>
           <th>Address</th>
+          <th>Active</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -23,6 +24,11 @@
           <td>{{ data.phonePrefix }}-{{ data.phone }}</td>
           <td>{{ data.email }}</td>
           <td>{{ data.address }}</td>
+          <td>
+            <nz-switch (ngModelChange)="changeActiveStatus(data)" [ngModel]="data.isActive" [nzCheckedChildren]="checkedTemplate" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+            <ng-template #checkedTemplate><nz-icon nzType="check" /></ng-template>
+            <ng-template #unCheckedTemplate><nz-icon nzType="close" /></ng-template>
+          </td>
           <td>
             <!-- View Button (Primary Blue) -->
             <button class="m-1" nz-button nzType="primary" nzSize="small" (click)="viewUser(data)">View</button>

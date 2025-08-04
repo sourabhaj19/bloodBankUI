@@ -72,7 +72,8 @@ export class UserEditComponent {
         latitude: [null, [Validators.min(-90), Validators.max(90)]],
         longitude: [null, [Validators.min(-180), Validators.max(180)]],
         lastDonationDate: [null],
-        isAvailable: [true]
+        isAvailable: [true],
+        isActive: [true]
       });
   }
 

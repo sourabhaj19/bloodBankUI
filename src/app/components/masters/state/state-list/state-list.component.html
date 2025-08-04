@@ -18,10 +18,10 @@
       <td>{{ data.country?.code }}</td>
       <td>
         <!-- Edit Button (Default with Border) -->
-        <button class="m-1" nz-button nzType="default" nzSize="small" (click)="editState(data.id)">Edit</button>
+        <button class="m-1" nz-button nzType="default" nzSize="small" (click)="editState(data)">Edit</button>
 
         <!-- Delete Button (Danger Red) -->
-        <button class="m-1" nz-button nzType="primary" nzDanger nzSize="small">Delete</button>
+        <button class="m-1" nz-button nzType="primary" nzDanger nzSize="small" (click)="delete(data)">Delete</button>
       </td>
     </tr>
     }
