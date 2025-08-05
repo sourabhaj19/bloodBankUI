@@ -13,6 +13,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { Router, RouterModule } from '@angular/router';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { User } from '../user.model';
+import { ChangePasswordComponent } from '../change-password/change-password.component';
 
 @Component({
   selector: 'app-users-list',
@@ -121,6 +122,17 @@ export class UsersListComponent implements OnInit {
   search(): void {
     this.visible = false;
     this.listOfDisplayData = this.listOfUsers.filter((item: any) => item.fullName.indexOf(this.searchValue) !== -1);
+  }
+
+  changePassword(user: User) {
+    console.log('Changing password for user:', user);
+    this.modal.create({
+      nzTitle: `Change Password for ${user.fullName}`,
+      nzContent: ChangePasswordComponent, // Replace with your actual change password component
+      nzData: { user }, // Pass user data to the component
+      nzWidth: 600,
+      nzFooter: null
+    });
   }
   
 

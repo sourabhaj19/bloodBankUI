@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { CITY, COUNTRY, GET_ALL_USERS, GET_AVAiLABLE_BLOOD, LOGIN, REGISTER, SEARCH_BLOOD_QUERY, STATE} from '../utils/apiUrls'
+import { CHANGEPASSWORD, CITY, COUNTRY, GET_ALL_USERS, GET_AVAiLABLE_BLOOD, LOGIN, REGISTER, SEARCH_BLOOD_QUERY, STATE} from '../utils/apiUrls'
 import { inject, Injectable } from '@angular/core';
 import { createRequestOption } from '../utils/request.util';
 import { Country } from '../components/masters/country/country.model';
@@ -104,5 +104,9 @@ export class apiService{
 
   deleteCity(id: number) {
     return this.http.delete(CITY + '/' + id, { observe: 'response' });
+  }
+
+  changePassword(payload: any) {
+    return this.http.post(CHANGEPASSWORD, payload, { observe: 'response' });
   }
 }

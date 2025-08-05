@@ -8,3 +8,4 @@ export const GET_AVAiLABLE_BLOOD = `${environment.apiUrl}users/available-blood`
 export const COUNTRY = `${environment.apiUrl}country`
 export const STATE = `${environment.apiUrl}state`
 export const CITY = `${environment.apiUrl}city`
+export const CHANGEPASSWORD = `${environment.apiUrl}users/change-password`
