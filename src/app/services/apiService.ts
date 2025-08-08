@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { CHANGEPASSWORD, CITY, COUNTRY, GET_ALL_USERS, GET_AVAiLABLE_BLOOD, LOGIN, REGISTER, SEARCH_BLOOD_QUERY, STATE} from '../utils/apiUrls'
+import { CHANGEPASSWORD, CITY, COUNTRY, GET_ALL_USERS, GET_AVAiLABLE_BLOOD, GETOTP, LOGIN, REGISTER, SEARCH_BLOOD_QUERY, STATE} from '../utils/apiUrls'
 import { inject, Injectable } from '@angular/core';
 import { createRequestOption } from '../utils/request.util';
 import { Country } from '../components/masters/country/country.model';
@@ -108,5 +108,9 @@ export class apiService{
 
   changePassword(payload: any) {
     return this.http.post(CHANGEPASSWORD, payload, { observe: 'response' });
+  }
+
+  getOtp(email: string) {
+    return this.http.post(`${GETOTP}`, {email} , { observe: 'response' });
   }
 }

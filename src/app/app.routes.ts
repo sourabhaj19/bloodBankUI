@@ -13,6 +13,7 @@ import { UserEditComponent } from './components/user-management/user-edit/user-e
 import { UserResolver } from './components/user-management/user.resolver';
 import { CityEditComponent } from './components/masters/city/city-edit/city-edit.component';
 import { StateEditComponent } from './components/masters/state/state-edit/state-edit.component';
+import { ForgotPasswordComponent } from './components/user-management/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, canActivate:[AuthGuard] },

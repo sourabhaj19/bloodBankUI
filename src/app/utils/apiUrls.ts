@@ -9,3 +9,4 @@ export const COUNTRY = `${environment.apiUrl}country`
 export const STATE = `${environment.apiUrl}state`
 export const CITY = `${environment.apiUrl}city`
 export const CHANGEPASSWORD = `${environment.apiUrl}users/change-password`
+export const GETOTP = `${environment.apiUrl}auth/forgot-password`

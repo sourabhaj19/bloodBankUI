@@ -11,6 +11,8 @@ import { UserOutline, LockOutline } from '@ant-design/icons-angular/icons';
 import { Router, RouterModule } from '@angular/router';
 import { apiService } from '../../services/apiService';
 import { AuthService } from '../../services/auth.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { ForgotPasswordComponent } from '../user-management/forgot-password/forgot-password.component';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +28,8 @@ import { AuthService } from '../../services/auth.service';
     RouterModule
   ],
   providers: [
-    { provide: NZ_ICONS, useValue: [UserOutline, LockOutline] }
+    { provide: NZ_ICONS, useValue: [UserOutline, LockOutline] },
+    NzModalService
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -35,6 +38,7 @@ export class LoginComponent {
   private fb = inject(NonNullableFormBuilder);
   private apiService = inject(apiService);
   private router = inject(Router);
+  private modal = inject(NzModalService);
   private authService = inject(AuthService);
 
   loginForm = this.fb.group({
@@ -72,5 +76,14 @@ export class LoginComponent {
         }
       );
     }
+  }
+
+  forgotPassword(){
+    this.modal.create({
+      nzTitle: 'Forgot Password',
+      nzContent: ForgotPasswordComponent,
+      nzFooter: null,
+      nzWidth: '400px'
+    });
   }
 }
