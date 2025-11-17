@@ -96,11 +96,12 @@
   </form>
 
   @if(listOfSearchedUsers.length > 0){
-    <nz-table #basicTable [nzData]="listOfSearchedUsers" class="mt-3" [nzBordered]="true" [nzSize]="'middle'">
+    <nz-table #basicTable [nzData]="listOfSearchedUsers" class="mt-3 overflow-auto d-none d-sm-block" [nzBordered]="true" [nzSize]="'small'">
       <thead>
         <tr>
           <th>Name</th>
           <th>Age</th>
+          <th>Blood Group</th>
           <th>phone</th>
           <th>email</th>
           <th>Address</th>
@@ -112,6 +113,7 @@
         <tr>
           <td>{{ data?.fullName || '' }}</td>
           <td>{{ data?.age || '' }}</td>
+          <td>{{ data?.bloodGroup || '' }}</td>
           <td>{{ data?.phonePrefix || '' }}-{{ data?.phone || '' }}</td>
           <td>{{ data?.email || '' }}</td>
           <td>{{ data?.address || '' }}</td>
@@ -122,5 +124,18 @@
         }
       </tbody>
     </nz-table>
+
+     @for (data of basicTable.data; track data) {
+      <nz-card [nzTitle]="data?.fullName" class="mt-3 d-block d-sm-none">
+            <p>
+              <strong>Age:</strong> {{ data?.age || '' }} <br />
+              <strong>Blood Group:</strong> {{ data?.bloodGroup || '' }} <br />
+              <strong>Phone:</strong> {{ data?.phonePrefix || '' }}-{{ data?.phone || '' }} <br />
+              <strong>Email:</strong> {{ data?.email || '' }} <br />
+              <strong>Address:</strong> {{ data?.address || '' }} <br />
+              <button nz-button nzType="primary" nzSize="small" class="m-1" (click)="showUserOnMap(data)">View on Map</button>
+            </p>
+          </nz-card>
+     }
   }
 </nz-card>

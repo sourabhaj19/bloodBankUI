@@ -1,10 +1,7 @@
-
-
 <div class="container-fluid p-0">
-  <!-- Banner Section with NzCarousel -->
   <nz-carousel nzAutoPlay class="banner-carousel">
     <div nz-carousel-content *ngFor="let image of bannerImages">
-      <img [src]="image" alt="Blood donation banner" class="carousel-image">
+      <img [src]="image" alt="Blood donation banner" class="carousel-image" loading="lazy" decoding="async">
     </div>
   </nz-carousel>
 
@@ -61,13 +58,13 @@
           <nz-card nzTitle="Our Contact Details">
             <ul nz-list>
               <nz-list-item>
-                <i nz-icon nzType="environment" nzTheme="fill"></i> 123, Blood Bank Street, Pune, India
+                <i nz-icon nzType="environment" nzTheme="fill"></i> Gokhale Nagar, SB Road, Pune, Maharashtra, India
               </nz-list-item>
               <nz-list-item>
-                <i nz-icon nzType="mail" nzTheme="fill"></i> contact&#64;lifesaverbloodbank.com
+                <i nz-icon nzType="mail" nzTheme="fill"></i> sourabh.aj19&#64;gmail.como
               </nz-list-item>
               <nz-list-item>
-                <i nz-icon nzType="phone" nzTheme="fill"></i> +91 98765 43210
+                <i nz-icon nzType="phone" nzTheme="fill"></i> +91 96117 11320
               </nz-list-item>
               <nz-list-item>
                 <i nz-icon nzType="clock-circle" nzTheme="fill"></i> Open: 24/7

@@ -8,6 +8,9 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subject, takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-header',
   templateUrl: 'header.component.html',
@@ -24,8 +27,26 @@ export class HeaderComponent implements OnInit {
   filteredMenuItems: any[] = [];
   isLoggedIn = false;
   username = '';
+  private smallScreenQuery = '(max-width: 768px)'
+  private destroy$ = new Subject<void>()
 
-  constructor(public authService: AuthService) { }
+
+
+  constructor(public authService: AuthService, private breakpointObserver: BreakpointObserver) {
+    this.breakpointObserver
+      .observe([this.smallScreenQuery])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result.matches) {
+          // small screen -> collapse the sider
+          this.isCollapsed = true;
+        } else {
+          // large screen -> expand the sider (or keep previously user-set state)
+          this.isCollapsed = false;
+        }
+      });
+
+   }
 
   ngOnInit(): void {
     this.authService.userRole$.subscribe((role) => {
