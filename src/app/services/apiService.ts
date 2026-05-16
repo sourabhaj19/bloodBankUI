@@ -3,7 +3,7 @@ import { CHANGEPASSWORD, CITY, COUNTRY, GET_ALL_USERS, GET_AVAiLABLE_BLOOD, GETO
 import { inject, Injectable } from '@angular/core';
 import { createRequestOption } from '../utils/request.util';
 import { Country } from '../components/masters/country/country.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { State } from '../components/masters/state/state.model';
 import { User } from '../components/user-management/user.model';
 import { City } from '../components/masters/city/city.model';
@@ -46,6 +46,60 @@ export class apiService{
     return this.http.get(COUNTRY, { params: options, observe: 'response' })
   }
 
+  // getCurrentUser(){
+  //   return this.http.get(GET_ALL_USERS + '/current', { observe: 'response' });
+  // }
+
+ getCurrentUser(): Observable<any> {
+    const dummyUser = {
+      id: 1,
+      fullName: 'John Doe',
+      email: 'john.doe@example.com',
+      phonePrefix: '+91',
+      phone: '9876543210',
+      role: 'ROLE_USER',
+      latitude: 12.9716,
+      longitude: 77.5946,
+      lastDonationDate: '2025-06-01'
+    };
+    return of(dummyUser);
+  }
+
+  getRecentDonations(): Observable<any[]> {
+    const dummy = [
+      { donor: 'Alice Smith', bloodType: 'A+', date: '2025-11-10', status: 'Completed' },
+      { donor: 'Bob Johnson', bloodType: 'O-', date: '2025-11-08', status: 'Completed' }
+    ];
+    return of(dummy);
+  }
+
+  getUpcomingDrives(): Observable<any[]> {
+    const dummy = [
+      { id: 1, title: 'City Hospital Drive', date: '2025-12-01', location: 'City Hospital' },
+      { id: 2, title: 'Community Center Drive', date: '2025-12-15', location: 'Community Center' }
+    ];
+    return of(dummy);
+  }
+
+  getRequestsHelpedCount(): Observable<number> {
+    return of(5);
+  }
+
+  getNearbyDonors(location: any): Observable<any[]> {
+    const dummy = [
+      { id: 101, fullName: 'Ravi Kumar', bloodGroup: 'B+', distance: '1.2 km', phonePrefix: '+91', phone: '9000000001', latitude: 12.9720, longitude: 77.5950 },
+      { id: 102, fullName: 'Sita Patel', bloodGroup: 'O+', distance: '2.4 km', phonePrefix: '+91', phone: '9000000002', latitude: 12.9700, longitude: 77.5930 }
+    ];
+    return of(dummy);
+  }
+
+  getMyDonations(): Observable<any[]> {
+    const dummy = [
+      { id: 201, bloodType: 'A+', date: '2024-06-10', status: 'Completed' },
+      { id: 202, bloodType: 'A+', date: '2023-12-05', status: 'Completed' }
+    ];
+    return of(dummy);
+  }
   getAvailableStates(queryParams?: any) {
     const options = createRequestOption(queryParams);
     return this.http.get(STATE, { params: options ,observe: 'response' });

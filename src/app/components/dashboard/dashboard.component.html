@@ -92,6 +92,155 @@
     </div>
     </nz-content>
 } @else {
-  User Logged in Successfully
-  <p>Welcome {{ currentUser?.fullName }}</p>
+  <nz-content>
+    <div class="inner-content user-dashboard">
+      <!-- Top: profile + key stats -->
+      <div nz-row [nzGutter]="16" class="top-row">
+        <div nz-col [nzXs]="24" [nzSm]="8" [nzMd]="6" [nzLg]="5">
+          <nz-card>
+            <div class="profile-card">
+              <nz-avatar nzSize="large" nzIcon="user"></nz-avatar>
+              <h3 class="mt-2">{{ currentUser?.fullName }}</h3>
+              <p class="muted">{{ currentUser?.email }}</p>
+              <p class="muted">{{ currentUser?.phonePrefix }}-{{ currentUser?.phone }}</p>
+              <button nz-button nzType="link" (click)="goToProfile()">Edit Profile</button>
+            </div>
+          </nz-card>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="16" [nzMd]="18" [nzLg]="19">
+          <div nz-row [nzGutter]="16" class="stats-row">
+            <div nz-col [nzXs]="12" [nzSm]="6" [nzMd]="6" [nzLg]="6">
+              <nz-card class="stat-card">
+                <div class="stat-content">
+                  <h4>My Donations</h4>
+                  <p class="stat-value">{{ myDonations?.length || 0 }}</p>
+                  <nz-tag nzColor="green">Verified</nz-tag>
+                </div>
+              </nz-card>
+            </div>
+            <div nz-col [nzXs]="12" [nzSm]="6" [nzMd]="6" [nzLg]="6">
+              <nz-card class="stat-card">
+                <div class="stat-content">
+                  <h4>Requests Helped</h4>
+                  <p class="stat-value">{{ requestsHelpedCount || 0 }}</p>
+                  <nz-tag nzColor="blue">Active</nz-tag>
+                </div>
+              </nz-card>
+            </div>
+            <div nz-col [nzXs]="12" [nzSm]="6" [nzMd]="6" [nzLg]="6">
+              <nz-card class="stat-card">
+                <div class="stat-content">
+                  <h4>Nearby Donors</h4>
+                  <p class="stat-value">{{ nearbyDonors?.length || 0 }}</p>
+                  <button nz-button nzType="link" (click)="showNearbyOnMap()">View on Map</button>
+                </div>
+              </nz-card>
+            </div>
+            <div nz-col [nzXs]="12" [nzSm]="6" [nzMd]="6" [nzLg]="6">
+              <nz-card class="stat-card">
+                <div class="stat-content">
+                  <h4>Last Donation</h4>
+                  <p class="stat-value">{{ currentUser?.lastDonationDate || 'N/A' }}</p>
+                  <nz-tag nzColor="orange">Keep Track</nz-tag>
+                </div>
+              </nz-card>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle: recent user activity and nearby donors -->
+      <div nz-row [nzGutter]="16" class="middle-row mt-3">
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+          <nz-card nzTitle="My Recent Donations">
+            <nz-list nzItemLayout="horizontal" [nzDataSource]="myDonations">
+              <ng-template #item let-item>
+                <nz-list-item>
+                  <nz-list-item-meta [nzTitle]="item.bloodType" [nzDescription]="item.date">
+                    <ng-template #nzAvatar>
+                      <nz-avatar nzIcon="heart"></nz-avatar>
+                    </ng-template>
+                  </nz-list-item-meta>
+                  <nz-tag [nzColor]="item.status === 'Completed' ? 'green' : 'orange'">{{ item.status }}</nz-tag>
+                </nz-list-item>
+              </ng-template>
+            </nz-list>
+            @if ((myDonations || []).length === 0) {
+              <div class="mt-2">No donations yet — consider donating!</div>
+            }
+          </nz-card>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+          <nz-card nzTitle="Nearby Donors">
+            <nz-table #nearTable [nzData]="nearbyDonors" [nzBordered]="false" [nzSize]="'small'">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Blood</th>
+                  <th>Distance</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for(d of nearTable.data; track d) {
+                <tr>
+                  <td>{{ d?.fullName || '' }}</td>
+                  <td>{{ d?.bloodGroup || '' }}</td>
+                  <td>{{ d?.distance || '--' }}</td>
+                  <td>
+                    <button nz-button nzType="primary" nzSize="small" (click)="showUserOnMap(d)">Map</button>
+                    <button nz-button nzType="link" nzSize="small" (click)="contactDonor(d)">Contact</button>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </nz-table>
+            <div class="mt-2">
+              <button nz-button nzType="default" (click)="showNearbyOnMap()">View All On Map</button>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+
+      <!-- Bottom: quick actions and upcoming drives -->
+      <div nz-row [nzGutter]="16" class="bottom-row mt-3">
+        <div nz-col [nzXs]="24" [nzSm]="12">
+          <nz-card nzTitle="Quick Actions">
+            <div nz-row [nzGutter]="8">
+              <div nz-col [nzSpan]="12">
+                <button nz-button nzType="primary" nzBlock (click)="openRequestModal()">Request Blood</button>
+              </div>
+              <div nz-col [nzSpan]="12">
+                <button nz-button nzType="default" nzBlock (click)="goToProfile()">Update Profile</button>
+              </div>
+              <div nz-col [nzSpan]="12" class="mt-2">
+                <button nz-button nzType="dashed" nzBlock (click)="shareProfile()">Share</button>
+              </div>
+              <div nz-col [nzSpan]="12" class="mt-2">
+                <button nz-button nzType="link" nzBlock (click)="becomeDonor()">Become a Donor</button>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="12">
+          <nz-card nzTitle="Upcoming Drives">
+            <nz-list [nzDataSource]="upcomingDrives">
+              <ng-template #item let-drive>
+                <nz-list-item>
+                  <nz-list-item-meta [nzTitle]="drive.title" [nzDescription]="drive.date + ' • ' + drive.location"></nz-list-item-meta>
+                  <button nz-button nzType="link" (click)="viewDrive(drive)">Details</button>
+                </nz-list-item>
+              </ng-template>
+            </nz-list>
+            @if ((upcomingDrives || []).length === 0) {
+              <div class="mt-2">No upcoming drives nearby.</div>
+            }
+          </nz-card>
+        </div>
+      </div>
+    </div>
+  </nz-content>
 }
