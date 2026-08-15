@@ -12,12 +12,13 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   imports: [NzLayoutModule, NzMenuModule, NzCardModule, NzGridModule,
     NzTagModule, NzListModule, NzAvatarModule, NzButtonModule,
-    NzIconModule, NzTableModule],
+    NzIconModule, NzTableModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -33,6 +34,14 @@ export class DashboardComponent implements OnInit{
   nearbyDonors: any[] = [];
   upcomingDrives: any[] = [];
   requestsHelpedCount: number = 0;
+  nearbyRadiusKm: number = 5;
+  nearbyLimit?: number = undefined;
+  private nearbyRadiusDebounceTimer: any;
+  
+  // Admin stats
+  totalDonors: number = 0;
+  activeDonations: number = 0;
+  bloodRequests: number = 0;
   loading = {
     recent: false,
     my: false,
@@ -46,39 +55,51 @@ export class DashboardComponent implements OnInit{
     this.tryAutoFetchNearby();
   }
 
-  // Load user from api service or fallback to localStorage token payload
+  // Load user from sessionStorage where it's stored upon login
   private loadCurrentUser() {
-    try {
-      // prefer api call if available
-      if (this.api.getCurrentUser) {
-        this.api.getCurrentUser().subscribe({
-          next: (u: any) => (this.currentUser = u),
-          error: () => (this.currentUser = this.getUserFromStorage())
-        });
-      } else {
-        this.currentUser = this.getUserFromStorage();
-      }
-    } catch {
-      this.currentUser = this.getUserFromStorage();
-    }
+    this.currentUser = this.getUserFromStorage();
   }
 
-
-  
   private getUserFromStorage() {
     try {
-      const raw = localStorage.getItem('currentUser');
-      return raw ? JSON.parse(raw) : null;
+      const raw = sessionStorage.getItem('user');
+      if (raw) {
+        const data = JSON.parse(raw);
+        return data.user || data;
+      }
+      return null;
     } catch {
       return null;
     }
   }
 
   private loadDashboardData() {
+    if (this.currentUser?.role === 'ROLE_ADMIN') {
+      this.loadAdminData();
+    } else {
+      this.loadRecentDonations();
+      this.loadMyDonations();
+      this.loadUpcomingDrives();
+      this.loadRequestsHelpedCount();
+    }
+  }
+
+  private loadAdminData() {
+    if (this.api.getUsers) {
+      this.api.getUsers().subscribe({
+        next: (res: any) => {
+          this.totalDonors = res.body?.length || res?.length || 0;
+        }
+      });
+    }
+    if (this.api.getAvailableBlood) {
+      this.api.getAvailableBlood().subscribe({
+        next: (res: any) => {
+          this.activeDonations = res.body?.length || res?.length || 0;
+        }
+      });
+    }
     this.loadRecentDonations();
-    this.loadMyDonations();
-    this.loadUpcomingDrives();
-    this.loadRequestsHelpedCount();
   }
 
   private loadRecentDonations() {
@@ -128,37 +149,68 @@ export class DashboardComponent implements OnInit{
   private tryAutoFetchNearby() {
     if (!this.api.getNearbyDonors) return;
 
-    const fetch = (lat?: number, lon?: number) => {
-      this.loading.nearby = true;
-      this.api.getNearbyDonors({ lat, lon }).subscribe({
-        next: (res: any) => (this.nearbyDonors = res || []),
-        error: () => (this.nearbyDonors = []),
-        complete: () => (this.loading.nearby = false)
-      });
-    };
-
     const lat = this.currentUser?.latitude;
-    const lon = this.currentUser?.longitude;
+    const lng = this.currentUser?.longitude;
 
-    if (lat && lon) {
-      fetch(lat, lon);
+    if (lat && lng) {
+      this.fetchNearby(lat, lng);
       return;
     }
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => fetch(pos.coords.latitude, pos.coords.longitude),
-        () => fetch() // fallback: server can use IP lookup or return default nearby list
+        (pos) => this.fetchNearby(pos.coords.latitude, pos.coords.longitude),
+        () => this.fetchNearby() // fallback: server can use IP lookup or return default nearby list
       );
     } else {
-      fetch();
+      this.fetchNearby();
     }
+  }
+
+  private fetchNearby(lat?: number, lng?: number) {
+    this.loading.nearby = true;
+    this.api.getNearbyDonors(lat, lng, this.nearbyRadiusKm, this.nearbyLimit).subscribe({
+      next: (res: any) => (this.nearbyDonors = res || []),
+      error: () => (this.nearbyDonors = []),
+      complete: () => (this.loading.nearby = false)
+    });
+  }
+
+  refreshNearby() {
+    const lat = this.currentUser?.latitude;
+    const lng = this.currentUser?.longitude;
+    if (lat && lng) {
+      this.fetchNearby(lat, lng);
+      return;
+    }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => this.fetchNearby(pos.coords.latitude, pos.coords.longitude),
+        () => this.fetchNearby()
+      );
+    } else {
+      this.fetchNearby();
+    }
+  }
+
+  onRadiusChange(value: number) {
+    this.nearbyRadiusKm = value;
+    if (this.nearbyRadiusDebounceTimer) {
+      clearTimeout(this.nearbyRadiusDebounceTimer);
+    }
+    this.nearbyRadiusDebounceTimer = setTimeout(() => {
+      this.refreshNearby();
+    }, 500);
   }
 
   // Actions wired to the template ------------------------------------------------
 
   goToProfile() {
-    this.router.navigate(['/profile']);
+    if (this.currentUser?.id) {
+      this.router.navigate(['/register'], { state: { id: this.currentUser.id, edit: true } });
+      return;
+    }
+    this.router.navigate(['/register']);
   }
 
   showNearbyOnMap() {
@@ -232,8 +284,11 @@ export class DashboardComponent implements OnInit{
   }
 
   becomeDonor() {
-    // route to registration/edit form prefilled
-    this.router.navigate(['/registration'], { state: { prefill: this.currentUser } });
+    if (this.currentUser?.id) {
+      this.router.navigate(['/register'], { state: { id: this.currentUser.id, edit: true } });
+      return;
+    }
+    this.router.navigate(['/register'], { state: { prefill: this.currentUser, edit: true } });
   }
 
   viewDrive(drive: any) {

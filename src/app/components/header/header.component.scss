@@ -1,7 +1,5 @@
 .header-menu {
-  line-height: 64px;
-  background-color: transparent;
-  color: white;
+  line-height: 61px !important;
 }
 
 .outer-content {
@@ -17,10 +15,6 @@ nz-breadcrumb {
   background: #fff;
 }
 
-.sider-menu {
-  height: 100%;
-}
-
 .inner-content {
   padding: 0 24px;
   min-height: 280px;
@@ -31,10 +25,32 @@ nz-footer {
 }
 
 .ant-layout-header {
-padding: 0px !important;
+  padding: 0px !important;
 }
 
+/* Custom styling for the active horizontal menu item */
+::ng-deep .ant-menu-dark.ant-menu-horizontal>.ant-menu-item-selected {
+  background-color: transparent !important;
+  color: #ff4d4f !important;
+  /* Red theme for Blood Bank */
+  border-bottom: 3px solid #ff4d4f !important;
+}
 
-.ant-layout-sider-children {
-  height: 80vh;
+::ng-deep .ant-menu-dark.ant-menu-horizontal>.ant-menu-item:hover {
+  color: #ff4d4f !important;
+}
+
+::ng-deep .ant-menu-item:hover {
+  background-color: transparent !important;
+  color: #ff4d4f !important;
+}
+
+::ng-deep .ant-menu-dark.ant-menu-horizontal>.ant-menu-submenu-selected {
+  background-color: transparent !important;
+  color: #ff4d4f !important;
+  border-bottom: 3px solid #ff4d4f !important;
+}
+
+::ng-deep .ant-menu-dark.ant-menu-horizontal>.ant-menu-submenu:hover {
+  color: #ff4d4f !important;
 }

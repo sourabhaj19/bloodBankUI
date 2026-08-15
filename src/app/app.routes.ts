@@ -15,8 +15,8 @@ import { CityEditComponent } from './components/masters/city/city-edit/city-edit
 import { StateEditComponent } from './components/masters/state/state-edit/state-edit.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate:[AuthGuard] },
-  { path: 'home', component: HomeComponent, canActivate:[AuthGuard] },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
   {
@@ -30,7 +30,7 @@ export const routes: Routes = [
   {
     path: 'users/:id',
     component: UserEditComponent,
-    resolve : { user: UserResolver },
+    resolve: { user: UserResolver },
   },
 
   { path: 'dashboard', component: DashboardComponent },

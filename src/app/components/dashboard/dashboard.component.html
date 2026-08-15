@@ -7,7 +7,7 @@
           <nz-card class="stat-card">
             <div class="stat-content">
               <h3>Total Donors</h3>
-              <p class="stat-value">1,248</p>
+              <p class="stat-value">{{ totalDonors }}</p>
               <nz-tag nzColor="green">+12 this week</nz-tag>
             </div>
           </nz-card>
@@ -16,7 +16,7 @@
           <nz-card class="stat-card">
             <div class="stat-content">
               <h3>Active Donations</h3>
-              <p class="stat-value">86</p>
+              <p class="stat-value">{{ activeDonations }}</p>
               <nz-tag nzColor="blue">Ready</nz-tag>
             </div>
           </nz-card>
@@ -25,7 +25,7 @@
           <nz-card class="stat-card">
             <div class="stat-content">
               <h3>Blood Requests</h3>
-              <p class="stat-value">24</p>
+              <p class="stat-value">{{ bloodRequests }}</p>
               <nz-tag nzColor="orange">Pending</nz-tag>
             </div>
           </nz-card>
@@ -173,13 +173,14 @@
         </div>
 
         <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
-          <nz-card nzTitle="Nearby Donors">
+          <nz-card [nzTitle]="nzTitle">
+           
             <nz-table #nearTable [nzData]="nearbyDonors" [nzBordered]="false" [nzSize]="'small'">
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>Blood</th>
-                  <th>Distance</th>
+                  <th>Distance (km)</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -188,7 +189,7 @@
                 <tr>
                   <td>{{ d?.fullName || '' }}</td>
                   <td>{{ d?.bloodGroup || '' }}</td>
-                  <td>{{ d?.distance || '--' }}</td>
+                  <td>{{ d?.distance }}</td>
                   <td>
                     <button nz-button nzType="primary" nzSize="small" (click)="showUserOnMap(d)">Map</button>
                     <button nz-button nzType="link" nzSize="small" (click)="contactDonor(d)">Contact</button>
@@ -202,6 +203,24 @@
             </div>
           </nz-card>
         </div>
+
+         <ng-template #nzTitle>
+              <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+                <div style="font-weight:600">Nearby Donors</div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted,#6b7280)">
+                  <label style="margin:0;font-size:12px;color:inherit">Radius</label>
+                  <input
+                    type="number"
+                    [(ngModel)]="nearbyRadiusKm"
+                    (ngModelChange)="onRadiusChange($event)"
+                    min="1"
+                    max="100"
+                    style="width:64px;padding:4px 6px;font-size:13px;border-radius:4px;border:1px solid #e6e6e6"
+                  />
+                  <span style="font-size:12px;color:inherit">km</span>
+                </div>
+              </div>
+            </ng-template>
       </div>
 
       <!-- Bottom: quick actions and upcoming drives -->

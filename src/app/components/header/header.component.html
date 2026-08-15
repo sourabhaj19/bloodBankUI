@@ -1,35 +1,35 @@
-<nz-layout>
+<nz-layout class="layout">
   <nz-header>
     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; width: 100%;">
       <!-- Logo -->
-      <div style="color: white; font-weight: bold; font-size: 1.5rem;">Blood Bank
-        <nz-icon *ngIf="isLoggedIn" class="trigger" [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed" />
+      <div
+        style="color: white; font-weight: bold; font-size: 1.5rem; display: flex; align-items: center; padding-left: 20px;">
+        Blood Bank
       </div>
-  
-      <!-- Menu Items -->
-      <ul *ngIf="!isLoggedIn"
-        style="display: flex; flex: 1; list-style: none; margin: 0; padding: 0; color: white; flex-wrap: wrap;">
-        <li style="margin: 0 1rem;" class="d-none d-md-inline" href="#home">Home</li>
-        <li style="margin: 0 1rem;" class="d-none d-md-inline" href="#about">About</li>
-        <li style="margin: 0 1rem;" class="d-none d-md-inline" href="#contact">Contact</li>
-        <li style="margin: 0 1rem;" class="d-none d-md-inline" href="#contact">Search Blood</li>
+
+      <!-- Public Menu Items (Desktop) -->
+      <ul *ngIf="!isLoggedIn" class="header-menu d-none d-md-flex" nz-menu nzMode="horizontal" nzTheme="dark"
+        style="flex: 1; border-bottom: none; line-height: 64px; justify-content: flex-end; padding-right: 20px;">
+        <li nz-menu-item routerLink="/" routerLinkActive="ant-menu-item-selected"
+          [routerLinkActiveOptions]="{exact: true}">Home</li>
+        <li nz-menu-item routerLink="/" fragment="about" routerLinkActive="ant-menu-item-selected"
+          [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'exact'}">
+          About</li>
+        <li nz-menu-item routerLink="/" fragment="contact" routerLinkActive="ant-menu-item-selected"
+          [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'exact'}">
+          Contact</li>
+        <li nz-menu-item routerLink="/" fragment="search-blood" routerLinkActive="ant-menu-item-selected"
+          [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'exact'}">
+          Search Blood</li>
       </ul>
-  
-      <!-- Login Button -->
-      <div style="padding-right: 10px;">
-        <button *ngIf="!isLoggedIn" class="btn btn-secondary" (click)="navigateTo('/login')">Login</button>
-        <button *ngIf="isLoggedIn" class="btn btn-secondary" (click)="onLogout()">Log Out</button>
-      </div>
-    </div>
-  </nz-header>
-  
-  <nz-layout *ngIf="isLoggedIn">
-    <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" nzWidth="200px" nzTheme="dark">
-      <ul nz-menu nzMode="inline" class="sider-menu">
+
+      <!-- Logged In Menu Items (Desktop) -->
+      <ul *ngIf="isLoggedIn" class="header-menu d-none d-md-flex" nz-menu nzMode="horizontal" nzTheme="dark"
+        style="flex: 1; border-bottom: none; line-height: 64px; justify-content: flex-end; padding-right: 20px;">
         <ng-container *ngFor="let item of filteredMenuItems">
-          <!-- For items with children - render as submenu -->
+          <!-- Submenu -->
           <li *ngIf="item.childrens && item.childrens.length > 0; else menuItem" nz-submenu [nzTitle]="item.title"
-            [nzIcon]="item.icon" [nzOpen]="item.isOpen">
+            [nzIcon]="item.icon">
             <ul>
               <li nz-menu-item *ngFor="let child of item.childrens" [nzSelected]="child.isSelected"
                 [routerLink]="child.link" routerLinkActive="ant-menu-item-selected">
@@ -38,8 +38,7 @@
               </li>
             </ul>
           </li>
-    
-          <!-- For items without children - render as simple menu item -->
+          <!-- Simple Menu Item -->
           <ng-template #menuItem>
             <li nz-menu-item [nzSelected]="item.isSelected" [routerLink]="item.link"
               routerLinkActive="ant-menu-item-selected">
@@ -49,15 +48,70 @@
           </ng-template>
         </ng-container>
       </ul>
-      </nz-sider>
-    <nz-layout class="inner-layout">
-      <!-- <nz-breadcrumb>
-        <nz-breadcrumb-item>Home</nz-breadcrumb-item>
-        <nz-breadcrumb-item>List</nz-breadcrumb-item>
-        <nz-breadcrumb-item>App</nz-breadcrumb-item>
-      </nz-breadcrumb> -->
+
+      <!-- Login/Logout Button & Mobile Menu Toggle -->
+      <div style="padding-right: 20px; display: flex; align-items: center; margin-left: auto;">
+        <button *ngIf="!isLoggedIn" class="btn btn-secondary d-none d-md-inline-block" (click)="navigateTo('/login')">Login</button>
+        <button *ngIf="isLoggedIn" class="btn btn-secondary d-none d-md-inline-block" (click)="onLogout()">Log Out</button>
+        <span class="d-md-none" style="color: white; font-size: 1.5rem; margin-left: 15px; cursor: pointer;" (click)="drawerVisible = true">
+          <i nz-icon nzType="menu" nzTheme="outline"></i>
+        </span>
+      </div>
+    </div>
+  </nz-header>
+
+  <nz-content style="padding: 24px; min-height: calc(100vh - 64px);">
+    <div class="inner-content">
       <router-outlet></router-outlet>
-    </nz-layout>
-  </nz-layout>
-  <router-outlet  *ngIf="!isLoggedIn"></router-outlet>
+    </div>
+  </nz-content>
 </nz-layout>
+
+<!-- Mobile Drawer -->
+<nz-drawer [nzVisible]="drawerVisible" nzPlacement="right" nzTitle="Menu" (nzOnClose)="drawerVisible = false">
+  <ng-container *nzDrawerContent>
+    <!-- Mobile Public Menu -->
+    <ul *ngIf="!isLoggedIn" nz-menu nzMode="inline">
+      <li nz-menu-item routerLink="/" routerLinkActive="ant-menu-item-selected"
+        [routerLinkActiveOptions]="{exact: true}" (click)="drawerVisible = false">Home</li>
+      <li nz-menu-item routerLink="/" fragment="about" routerLinkActive="ant-menu-item-selected"
+        [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'exact'}" (click)="drawerVisible = false">
+        About</li>
+      <li nz-menu-item routerLink="/" fragment="contact" routerLinkActive="ant-menu-item-selected"
+        [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'exact'}" (click)="drawerVisible = false">
+        Contact</li>
+      <li nz-menu-item routerLink="/" fragment="search-blood" routerLinkActive="ant-menu-item-selected"
+        [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'exact'}" (click)="drawerVisible = false">
+        Search Blood</li>
+      <li nz-menu-divider></li>
+      <li nz-menu-item (click)="drawerVisible = false; navigateTo('/login')">Login</li>
+    </ul>
+
+    <!-- Mobile Logged In Menu -->
+    <ul *ngIf="isLoggedIn" nz-menu nzMode="inline">
+      <ng-container *ngFor="let item of filteredMenuItems">
+        <!-- Submenu -->
+        <li *ngIf="item.childrens && item.childrens.length > 0; else menuItem" nz-submenu [nzTitle]="item.title"
+          [nzIcon]="item.icon">
+          <ul>
+            <li nz-menu-item *ngFor="let child of item.childrens" [nzSelected]="child.isSelected"
+              [routerLink]="child.link" routerLinkActive="ant-menu-item-selected" (click)="drawerVisible = false">
+              <span nz-icon [nzType]="child.icon" *ngIf="child.icon"></span>
+              <span>{{child.title}}</span>
+            </li>
+          </ul>
+        </li>
+        <!-- Simple Menu Item -->
+        <ng-template #menuItem>
+          <li nz-menu-item [nzSelected]="item.isSelected" [routerLink]="item.link"
+            routerLinkActive="ant-menu-item-selected" (click)="drawerVisible = false">
+            <span nz-icon [nzType]="item.icon" *ngIf="item.icon"></span>
+            <span>{{item.title}}</span>
+          </li>
+        </ng-template>
+      </ng-container>
+      <li nz-menu-divider></li>
+      <li nz-menu-item (click)="drawerVisible = false; onLogout()">Log Out</li>
+    </ul>
+  </ng-container>
+</nz-drawer>

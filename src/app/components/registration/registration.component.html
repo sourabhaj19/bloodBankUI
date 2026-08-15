@@ -1,10 +1,10 @@
-<nz-card [nzTitle]="isEditable ? '':'Registration'" [nzBordered]="false">
+<nz-card [nzTitle]="isEditable ? 'Edit Profile' : 'Registration'" [nzBordered]="false">
   <form nz-form [formGroup]="registrationForm" (ngSubmit)="submitForm()">
     <div nz-row [nzGutter]="16">
       <!-- Full Name -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your fullName!">
+          <nz-form-control nzHasFeedback nzErrorTip="Please input your Full Name!">
             <nz-input-group nzPrefixIcon="user">
               <input type="text" nz-input formControlName="fullName" placeholder="Full Name" />
             </nz-input-group>
@@ -15,7 +15,7 @@
       <!-- Email -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your email!">
+          <nz-form-control nzHasFeedback nzErrorTip="Please input a valid email!">
             <nz-input-group nzPrefixIcon="mail">
               <input type="email" nz-input autocomplete="username" formControlName="email" placeholder="Email" />
             </nz-input-group>
@@ -26,12 +26,12 @@
       <!-- Phone -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your phone!">
+          <nz-form-control nzErrorTip="Please enter a valid phone number!">
             <nz-input-group nzPrefixIcon="phone" [nzAddOnBefore]="addOnBeforeTemplate">
               <input type="text" nz-input formControlName="phone" placeholder="Phone" />
             </nz-input-group>
             <ng-template #addOnBeforeTemplate>
-              <nz-select formControlName="phoneprefix" style="width: 80px">
+              <nz-select formControlName="phonePrefix" style="width: 80px">
                 <nz-option nzLabel="+91" nzValue="+91"></nz-option>
                 <nz-option nzLabel="+92" nzValue="+92"></nz-option>
               </nz-select>
@@ -41,23 +41,27 @@
       </div>
 
       <!-- Password -->
-       @if(!isEditable){
-         <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
-           <nz-form-item>
-             <nz-form-control nzErrorTip="Please input your password!">
-               <nz-input-group nzPrefixIcon="lock">
-                 <input type="password" autocomplete="current-password" nz-input formControlName="password"
-                   placeholder="Password" />
-               </nz-input-group>
-             </nz-form-control>
-           </nz-form-item>
-         </div>
-       }
+      @if(!isEditable){
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please enter valid password!">
+            <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
+              <input [type]="passwordVisible ? 'text' : 'password'" autocomplete="current-password" nz-input
+                formControlName="password" placeholder="Password" />
+            </nz-input-group>
+            <ng-template #suffixTemplate>
+              <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                (click)="passwordVisible = !passwordVisible" style="cursor: pointer;"></span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      }
 
       <!-- Blood Group -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your blood group!">
+          <nz-form-control nzHasFeedback nzErrorTip="Please select your blood group!">
             <nz-select nzAllowClear nzPlaceHolder="Blood Group" formControlName="bloodGroup">
               <nz-option nzValue="A+" nzLabel="A+"></nz-option>
               <nz-option nzValue="A-" nzLabel="A-"></nz-option>
@@ -66,7 +70,7 @@
               <nz-option nzValue="AB+" nzLabel="AB+"></nz-option>
               <nz-option nzValue="AB-" nzLabel="AB-"></nz-option>
               <nz-option nzValue="O+" nzLabel="O+"></nz-option>
-              <nz-option nzValue="O-" nzLabel="O-"></nz-option>              
+              <nz-option nzValue="O-" nzLabel="O-"></nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -75,7 +79,7 @@
       <!-- Age -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your age!">
+          <nz-form-control nzHasFeedback nzErrorTip="Please input your age!">
             <nz-input-group>
               <input type="number" nz-input formControlName="age" placeholder="Age" />
             </nz-input-group>
@@ -86,7 +90,7 @@
       <!-- Gender -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your gender!">
+          <nz-form-control nzHasFeedback nzErrorTip="Please select your gender!">
             <nz-select nzAllowClear nzPlaceHolder="Gender" formControlName="gender">
               <nz-option nzValue="male" nzLabel="Male"></nz-option>
               <nz-option nzValue="female" nzLabel="Female"></nz-option>
@@ -96,24 +100,25 @@
         </nz-form-item>
       </div>
 
-     
+
 
       <!-- dob -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-              <nz-form-control placeholder="Select date of birth" nzHasFeedback nzErrorTip=" dob is required.">
-                  <nz-date-picker formControlName="dob" id="dob"></nz-date-picker>
-              </nz-form-control>
-            </nz-form-item>
+          <nz-form-control nzHasFeedback nzErrorTip="Date of birth is required.">
+            <nz-date-picker formControlName="dob" id="dob" nzPlaceHolder="Date of Birth"
+              style="width: 100%;"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
       </div>
 
       <!-- country -->
 
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control>
-            <nz-input-group >
-              <input type="text" nz-input formControlName="country" placeholder="country"/>
+          <nz-form-control nzHasFeedback nzErrorTip="Please input your country!">
+            <nz-input-group>
+              <input type="text" nz-input formControlName="country" placeholder="country" />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
@@ -123,9 +128,9 @@
       <!-- city -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control>
-            <nz-input-group >
-              <input type="text" nz-input formControlName="city" placeholder="city"/>
+          <nz-form-control nzHasFeedback nzErrorTip="Please input your city!">
+            <nz-input-group>
+              <input type="text" nz-input formControlName="city" placeholder="city" />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
@@ -136,19 +141,19 @@
 
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control>
+          <nz-form-control nzHasFeedback nzErrorTip="Please input your state!">
             <nz-input-group>
-              <input type="text" nz-input formControlName="state" placeholder="state"/>
+              <input type="text" nz-input formControlName="state" placeholder="state" />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
       </div>
 
-  
+
       <!-- address -->
       <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your address!">
+          <nz-form-control nzHasFeedback nzErrorTip="Please input your address!">
             <nz-input-group>
               <input type="textarea" nz-input formControlName="address" placeholder="address" />
             </nz-input-group>
@@ -156,14 +161,23 @@
         </nz-form-item>
       </div>
 
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button type="button" nzType="default" (click)="useCurrentLocation()">
+              <span nz-icon nzType="environment"></span>
+              Use my current location
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
     </div>
 
     <!-- Submit Button -->
-     @if(!isEditable){
-      <div style="text-align: right; margin-top: 20px;">
-        <button nz-button [nzType]="'primary'">Register</button>
-        </div>
-     }
-   
+    <div style="text-align: right; margin-top: 20px;">
+      <button nz-button [nzType]="'primary'">{{ isEditable ? 'Update Profile' : 'Register' }}</button>
+    </div>
+
   </form>
 </nz-card>

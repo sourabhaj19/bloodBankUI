@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { CHANGEPASSWORD, CITY, COUNTRY, GET_ALL_USERS, GET_AVAiLABLE_BLOOD, GETOTP, LOGIN, REGISTER, SEARCH_BLOOD_QUERY, STATE} from '../utils/apiUrls'
+import { CHANGEPASSWORD, CITY, COUNTRY, GET_ALL_USERS, GET_AVAiLABLE_BLOOD, GETOTP, LOGIN, NEARBY, REGISTER, SEARCH_BLOOD_QUERY, STATE } from '../utils/apiUrls'
 import { inject, Injectable } from '@angular/core';
 import { createRequestOption } from '../utils/request.util';
 import { Country } from '../components/masters/country/country.model';
@@ -12,14 +12,14 @@ import { City } from '../components/masters/city/city.model';
   providedIn: 'root' // This ensures the service is globally available
 })
 
-export class apiService{
+export class apiService {
   private http = inject(HttpClient);
   // constructor(private http : HttpClient){}
 
-  login(payload :any){
+  login(payload: any) {
     return this.http.post(LOGIN, payload)
   }
-  register(payload: User){
+  register(payload: User) {
     return this.http.post(REGISTER, payload)
   }
 
@@ -27,8 +27,8 @@ export class apiService{
   getUserById(id: number) {
     return this.http.get(GET_ALL_USERS + '/' + id, { observe: 'response' });
   }
-  searchBlood(query : any){
-    return this.http.post(SEARCH_BLOOD_QUERY, query, {observe : 'response'})
+  searchBlood(query: any) {
+    return this.http.post(SEARCH_BLOOD_QUERY, query, { observe: 'response' })
   }
 
   getUsers(queryParams?: any) {
@@ -50,7 +50,7 @@ export class apiService{
   //   return this.http.get(GET_ALL_USERS + '/current', { observe: 'response' });
   // }
 
- getCurrentUser(): Observable<any> {
+  getCurrentUser(): Observable<any> {
     const dummyUser = {
       id: 1,
       fullName: 'John Doe',
@@ -85,24 +85,22 @@ export class apiService{
     return of(5);
   }
 
-  getNearbyDonors(location: any): Observable<any[]> {
-    const dummy = [
-      { id: 101, fullName: 'Ravi Kumar', bloodGroup: 'B+', distance: '1.2 km', phonePrefix: '+91', phone: '9000000001', latitude: 12.9720, longitude: 77.5950 },
-      { id: 102, fullName: 'Sita Patel', bloodGroup: 'O+', distance: '2.4 km', phonePrefix: '+91', phone: '9000000002', latitude: 12.9700, longitude: 77.5930 }
-    ];
-    return of(dummy);
+  getNearbyDonors(lat?: number, lng?: number, radiusKm?: number, limit?: number): Observable<any[]> {
+    const options = createRequestOption({ lat, lng, radiusKm, limit });
+    return this.http.get<any[]>(NEARBY, { params: options });
   }
 
   getMyDonations(): Observable<any[]> {
     const dummy = [
       { id: 201, bloodType: 'A+', date: '2024-06-10', status: 'Completed' },
-      { id: 202, bloodType: 'A+', date: '2023-12-05', status: 'Completed' }
+      { id: 202, bloodType: 'A+', date: '2023-12-05', status: 'Completed' },
+      { id: 203, bloodType: 'A+', date: '2023-12-05', status: 'Completed' }
     ];
     return of(dummy);
   }
   getAvailableStates(queryParams?: any) {
     const options = createRequestOption(queryParams);
-    return this.http.get(STATE, { params: options ,observe: 'response' });
+    return this.http.get(STATE, { params: options, observe: 'response' });
   }
 
   getAvailableCities(queryParams?: any) {
@@ -110,7 +108,7 @@ export class apiService{
     return this.http.get(CITY, { params: options, observe: 'response' });
   }
 
-  deleteUser(id:number){
+  deleteUser(id: number) {
     return this.http.delete(GET_ALL_USERS + '/' + id, { observe: 'response' });
   }
 
@@ -121,12 +119,12 @@ export class apiService{
   deleteCountry(id: number) {
     return this.http.delete(COUNTRY + '/' + id, { observe: 'response' });
   }
-  editCountry(payload : Country) {
-    return this.http.put(COUNTRY , payload, { observe: 'response' });
+  editCountry(payload: Country) {
+    return this.http.put(COUNTRY, payload, { observe: 'response' });
   }
 
-  editUser(User:User) {
-    return this.http.put(GET_ALL_USERS, User ,{ observe: 'response' });
+  editUser(User: User) {
+    return this.http.put(GET_ALL_USERS, User, { observe: 'response' });
   }
 
   getCountries(queryParams?: any) {
@@ -165,6 +163,6 @@ export class apiService{
   }
 
   getOtp(email: string) {
-    return this.http.post(`${GETOTP}`, {email} , { observe: 'response' });
+    return this.http.post(`${GETOTP}`, { email }, { observe: 'response' });
   }
 }

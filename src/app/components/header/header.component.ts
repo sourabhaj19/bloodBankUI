@@ -8,8 +8,7 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Subject, takeUntil } from 'rxjs';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-header',
@@ -17,36 +16,18 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['header.component.scss'],
   standalone: true,
   imports: [
-    CommonModule, NzMenuModule,
+    CommonModule, NzMenuModule, NzDrawerModule,
     NzBreadCrumbModule, NzIconModule, NzLayoutModule, RouterOutlet, RouterModule
   ],
 })
 export class HeaderComponent implements OnInit {
   route = inject(Router);
-  isCollapsed = false;
   filteredMenuItems: any[] = [];
   isLoggedIn = false;
   username = '';
-  private smallScreenQuery = '(max-width: 768px)'
-  private destroy$ = new Subject<void>()
+  drawerVisible = false;
 
-
-
-  constructor(public authService: AuthService, private breakpointObserver: BreakpointObserver) {
-    this.breakpointObserver
-      .observe([this.smallScreenQuery])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
-        if (result.matches) {
-          // small screen -> collapse the sider
-          this.isCollapsed = true;
-        } else {
-          // large screen -> expand the sider (or keep previously user-set state)
-          this.isCollapsed = false;
-        }
-      });
-
-   }
+  constructor(public authService: AuthService) { }
 
   ngOnInit(): void {
     this.authService.userRole$.subscribe((role) => {
@@ -64,6 +45,5 @@ export class HeaderComponent implements OnInit {
 
   navigateTo(route: string): void {
     this.route.navigate([route]);
-    this.isCollapsed = true;
   }
 }

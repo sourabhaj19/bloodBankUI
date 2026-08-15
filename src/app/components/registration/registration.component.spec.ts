@@ -20,4 +20,22 @@ describe('RegistrationComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should not request geolocation automatically in edit mode', () => {
+    const spy = spyOn(component, 'getLocation');
+    component.isEditable = true;
+
+    component.ngAfterViewInit();
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('should request geolocation only when user opts in', () => {
+    const spy = spyOn(component, 'getLocation');
+
+    component.useCurrentLocation();
+
+    expect(component.allowLocation).toBeTrue();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });
